@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Lyrically</string>
+    <string name="title_favourites">Favourites</string>
+    <string name="title_history">History</string>
+
+    <string name="api_key">***REMOVED***</string>
+    <string name="search_menu_search_item">Search</string>
+</resources>
