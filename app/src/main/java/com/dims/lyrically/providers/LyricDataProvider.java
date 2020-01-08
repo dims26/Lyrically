@@ -40,7 +40,7 @@ public class LyricDataProvider{
                 .url("https://genius.p.rapidapi.com/search?q=" + query)
                 .get()
                 .addHeader("x-rapidapi-host", "genius.p.rapidapi.com")
-                .addHeader("x-rapidapi-key", "***REMOVED***")
+                .addHeader("x-rapidapi-key", API_KEY)
                 .build();
         final String[] JSONResponse = new String[1];
         Response response = null;
