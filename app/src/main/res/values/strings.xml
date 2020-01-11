@@ -5,4 +5,5 @@
 
     <string name="api_key">***REMOVED***</string>
     <string name="search_menu_search_item">Search</string>
+    <string name="song_thumbnail_image_view_contentDescription">song thumbnail image view</string>
 </resources>

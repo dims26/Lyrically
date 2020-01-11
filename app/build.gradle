@@ -29,6 +29,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    //Third party libraries for http connection and image retrieval and loading
     implementation 'com.squareup.okhttp3:okhttp:4.3.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

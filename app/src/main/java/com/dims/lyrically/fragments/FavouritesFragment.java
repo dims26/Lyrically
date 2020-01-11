@@ -1,8 +1,6 @@
 package com.dims.lyrically.fragments;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,8 +15,6 @@ import android.widget.TextView;
 
 import com.dims.lyrically.R;
 import com.dims.lyrically.providers.LyricDataProvider;
-
-import java.io.IOException;
 
 
 /**
@@ -47,8 +43,6 @@ public class FavouritesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         textView = getActivity().findViewById(R.id.textView);
-        //TODO JSON response gotten from API. Work on integrating the data better.
-        textView.setText(LyricDataProvider.getInstance().search("iyanya"));
     }
 
     @Override

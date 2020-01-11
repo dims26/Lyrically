@@ -1,10 +1,18 @@
 package com.dims.lyrically.providers;
 
-import android.os.AsyncTask;
+import android.content.Context;
+import android.widget.Toast;
+
+import com.dims.lyrically.activities.SearchActivity;
+import com.dims.lyrically.models.Song;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -12,27 +20,19 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class LyricDataProvider{
-    private static LyricDataProvider INSTANCE = null;
+public  class LyricDataProvider{
     private String queryResult;
-    private LyricDataProvider(){}
-
-    public static LyricDataProvider getInstance(){
-        if (INSTANCE == null) {
-            synchronized (LyricDataProvider.class) {
-                INSTANCE = new LyricDataProvider();
-            }
-        }
-        return INSTANCE;
-    }
+    public LyricDataProvider(){}
 
     /**
      *
      * @param query The query to be searched for
+     * @param context Context of the calling application, used to send toast messages to the user
+     * @param callback
      * @return The API JSON response as a {@link String}. If call was not executed, an empty string
      * is returned.
      */
-    public String search(String query){
+    public void search(String query, final Context context, Callback callback) {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -43,27 +43,47 @@ public class LyricDataProvider{
                 .addHeader("x-rapidapi-key", API_KEY)
                 .build();
         final String[] JSONResponse = new String[1];
-        Response response = null;
-        try {
-            client.newCall(request)
-                    //enqueue enables an asynchronous call and retrieval of the result via a callback
-                    .enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                            JSONResponse[0] = "dims said failed";
-                        }
+        final Response[] httpResponse = new Response[1];
 
-                        @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                            JSONResponse[0] = response.body().string();
-                        }
-                    });
-            //From the rapidAPI test response, if there is a response, there will be a body. So there
-            //is no need to worry about making string() method null safe
-        }catch (Exception ex){
-            ex.printStackTrace();
-            return "";
+        client.newCall(request)
+                //enqueue enables an asynchronous call and retrieval of the result via a callback
+                .enqueue(callback);
+    }
+
+    public ArrayList<Song> extractJSONFeatures(String responseBody, Context context) {
+        ArrayList<Song> songs = new ArrayList<>();
+        try {
+            JSONObject baseJsonResponse = new JSONObject(responseBody);
+            JSONObject response = baseJsonResponse.getJSONObject("response");
+
+            JSONArray hits = response.getJSONArray("hits");
+            for (int i = 0; i < hits.length(); i++){
+                JSONObject currentHit = hits.getJSONObject(i);
+
+                String type = currentHit.getString("type");
+
+                JSONObject result = currentHit.getJSONObject("result");
+                String fullTitle = result.getString("full_title");
+                String title = result.getString("title");
+                String songArtImageThumbnailUrl = result.getString("song_art_image_thumbnail_url");
+                String url = result.getString("url");
+                String titleWithFeatured = result.getString("title_with_featured");
+                int id = result.getInt("id");
+
+                JSONObject primary_artist = result.getJSONObject("primary_artist");
+                String artistName = primary_artist.getString("name");
+
+                Song song = new Song(fullTitle, title, songArtImageThumbnailUrl, url,
+                        titleWithFeatured, id, artistName);
+                if(type.equals("song"))
+                    songs.add(song);
+            }
+            //Return List of songs
+            return songs;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Error parsing JSON", Toast.LENGTH_LONG).show();
+            return new ArrayList<Song>();
         }
-        return JSONResponse[0];
     }
 }

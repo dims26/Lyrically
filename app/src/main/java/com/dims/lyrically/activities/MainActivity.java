@@ -1,22 +1,25 @@
 package com.dims.lyrically.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.dims.lyrically.R;
 import com.dims.lyrically.fragments.FavouritesFragment;
 import com.dims.lyrically.fragments.HistoryFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
     private FavouritesFragment favouritesFragment;
     private HistoryFragment historyFragment;
+    private FloatingActionButton searchButton;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -53,6 +56,15 @@ public class MainActivity extends AppCompatActivity {
         //Might need to move the initializations out of the method
         favouritesFragment = new FavouritesFragment();
         historyFragment = new HistoryFragment();
+
+        searchButton = findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, favouritesFragment);//Change method to add() if it crashes
