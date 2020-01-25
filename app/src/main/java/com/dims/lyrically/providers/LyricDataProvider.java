@@ -3,18 +3,15 @@ package com.dims.lyrically.providers;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.dims.lyrically.activities.SearchActivity;
+import com.dims.lyrically.R;
 import com.dims.lyrically.models.Song;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -28,9 +25,8 @@ public  class LyricDataProvider{
      *
      * @param query The query to be searched for
      * @param context Context of the calling application, used to send toast messages to the user
-     * @param callback
-     * @return The API JSON response as a {@link String}. If call was not executed, an empty string
-     * is returned.
+     * @param callback The callback which defines the actions to be taken depending on the success
+     *                 of the network call
      */
     public void search(String query, final Context context, Callback callback) {
 
@@ -40,7 +36,7 @@ public  class LyricDataProvider{
                 .url("https://genius.p.rapidapi.com/search?q=" + query)
                 .get()
                 .addHeader("x-rapidapi-host", "genius.p.rapidapi.com")
-                .addHeader("x-rapidapi-key", API_KEY)
+                .addHeader("x-rapidapi-key", context.getResources().getString(R.string.api_key))
                 .build();
         final String[] JSONResponse = new String[1];
         final Response[] httpResponse = new Response[1];
@@ -83,7 +79,7 @@ public  class LyricDataProvider{
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(context, "Error parsing JSON", Toast.LENGTH_LONG).show();
-            return new ArrayList<Song>();
+            return new ArrayList<>();
         }
     }
 }

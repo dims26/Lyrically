@@ -6,4 +6,7 @@
     <string name="api_key">***REMOVED***</string>
     <string name="search_menu_search_item">Search</string>
     <string name="song_thumbnail_image_view_contentDescription">song thumbnail image view</string>
+    <string name="favourite_lyric">Mark as Favourite</string>
+    <string name="history_menu_action_clear">Clear</string>
+    <string name="cardItem_song_art_thumbnail">Song art thumbnail</string>
 </resources>

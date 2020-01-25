@@ -32,4 +32,8 @@ dependencies {
     //Third party libraries for http connection and image retrieval and loading
     implementation 'com.squareup.okhttp3:okhttp:4.3.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    //Room
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
 }

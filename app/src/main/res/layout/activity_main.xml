@@ -38,8 +38,9 @@
         android:layout_marginBottom="24dp"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="#65008477"
+        app:backgroundTint="#66008780"
+        app:elevation="0dp"
         app:layout_constraintBottom_toTopOf="@+id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/round_search_24" />
+        app:srcCompat="@drawable/round_search_24"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

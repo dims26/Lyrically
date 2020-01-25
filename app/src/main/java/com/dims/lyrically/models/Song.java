@@ -1,8 +1,10 @@
 package com.dims.lyrically.models;
 
-public class Song {
-    String fullTitle, title, songArtImageThumbnailUrl, url, titleWithFeatured, artistName;
-    int id;
+import java.io.Serializable;
+
+public class Song implements Serializable {
+    private String fullTitle, title, songArtImageThumbnailUrl, url, titleWithFeatured, artistName;
+    private int id;
 
     public Song(String fullTitle, String title, String songArtImageThumbnailUrl,
                 String url, String titleWithFeatured, int id, String artistName){

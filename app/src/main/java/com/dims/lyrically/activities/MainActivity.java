@@ -44,13 +44,15 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+    private BottomNavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);//Transition back to regular theme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         //Might need to move the initializations out of the method
@@ -71,4 +73,16 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof FavouritesFragment){
+            finish();
+        }else {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, favouritesFragment);
+            transaction.commit();
+
+            navView.setSelectedItemId(R.id.navigation_favourites);
+        }
+    }
 }

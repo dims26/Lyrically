@@ -10,14 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dims.lyrically.R;
-import com.dims.lyrically.models.Song;
+import com.dims.lyrically.database.History;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class SearchListItemRecyclerAdapter extends RecyclerView.Adapter<SearchListItemRecyclerAdapter.ListItemHolder> {
+public class HistoryListItemRecyclerAdapter extends RecyclerView.Adapter<HistoryListItemRecyclerAdapter.ListItemHolder> {
 
-    public ArrayList<Song> mSongs = new ArrayList<>();
+    public ArrayList<History> mHistory = new ArrayList<>();
 
     @NonNull
     @Override
@@ -28,19 +28,19 @@ public class SearchListItemRecyclerAdapter extends RecyclerView.Adapter<SearchLi
 
     @Override
     public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
-        Song song = mSongs.get(position);
+        History history = mHistory.get(position);
 
-        holder.titleFeaturedTextView.setText(song.getTitleWithFeatured());
-        holder.artistTextView.setText(song.getArtistName());
-        if (song.getSongArtImageThumbnailUrl() != null && !song.getSongArtImageThumbnailUrl().equals(""))
-            Picasso.get().load(song.getSongArtImageThumbnailUrl()).into(holder.songThumbnailImageView);
+        holder.titleFeaturedTextView.setText(history.getTitleWithFeatured());
+        holder.artistTextView.setText(history.getArtistName());
+        if (history.getSongArtImageThumbnailUrl() != null && !history.getSongArtImageThumbnailUrl().equals(""))
+            Picasso.get().load(history.getSongArtImageThumbnailUrl()).into(holder.songThumbnailImageView);
 
 
     }
 
     @Override
     public int getItemCount() {
-        return mSongs.size();
+        return mHistory.size();
     }
 
     class ListItemHolder extends RecyclerView.ViewHolder{
@@ -58,3 +58,4 @@ public class SearchListItemRecyclerAdapter extends RecyclerView.Adapter<SearchLi
         }
     }
 }
+
