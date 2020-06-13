@@ -34,3 +34,5 @@ A simple lyric searching and bookmarking android application. Utilizes genius mu
   <td>Lyric view</td>
  </tr>
 </table>
+
+**When cloning this application, be sure to obtain an API key from https://rapidapi.com/brianiswu/api/genius/endpoints before running it.**
