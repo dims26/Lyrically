@@ -14,13 +14,14 @@ import com.dims.lyrically.database.Favourites;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 // Create the basic adapter extending from RecyclerView.Adapter
 // Note that we specify the custom ViewHolder which gives us access to our views
 public class FavouritesCardItemRecyclerAdapter extends
         RecyclerView.Adapter<FavouritesCardItemRecyclerAdapter.ViewHolder> {
 
-    public ArrayList<Favourites> mFavourites = new ArrayList<>();
+    public List<Favourites> mFavourites = new ArrayList<>();
 
     @NonNull
     @Override
@@ -32,6 +33,7 @@ public class FavouritesCardItemRecyclerAdapter extends
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Favourites favourite = mFavourites.get(position);
+
 
         holder.titleFeaturedTextView.setText(favourite.getTitleWithFeatured());
         holder.artistTextView.setText(favourite.getArtistName());

@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Objects;
+
 @Entity(tableName = "history")
 public class History {
     @PrimaryKey
@@ -58,5 +60,24 @@ public class History {
         this.url = url;
         this.titleWithFeatured = titleWithFeatured;
         this.artistName = artistName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        History history = (History) o;
+        return id == history.id &&
+                Objects.equals(fullTitle, history.fullTitle) &&
+                Objects.equals(title, history.title) &&
+                Objects.equals(songArtImageThumbnailUrl, history.songArtImageThumbnailUrl) &&
+                Objects.equals(url, history.url) &&
+                Objects.equals(titleWithFeatured, history.titleWithFeatured) &&
+                Objects.equals(artistName, history.artistName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, fullTitle, title, songArtImageThumbnailUrl, url, titleWithFeatured, artistName);
     }
 }

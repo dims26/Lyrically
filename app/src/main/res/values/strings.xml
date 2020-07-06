@@ -9,4 +9,7 @@
     <string name="favourite_lyric">Mark as Favourite</string>
     <string name="history_menu_action_clear">Clear</string>
     <string name="cardItem_song_art_thumbnail">Song art thumbnail</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="error_indicator_contentDescription">Error Indicator</string>
 </resources>

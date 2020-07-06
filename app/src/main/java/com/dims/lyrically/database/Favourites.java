@@ -5,6 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity(tableName = "favourites")
 public class Favourites implements Serializable {
@@ -49,6 +50,25 @@ public class Favourites implements Serializable {
 
     public String getArtistName() {
         return artistName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Favourites that = (Favourites) o;
+        return id == that.id &&
+                Objects.equals(fullTitle, that.fullTitle) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(songArtImageThumbnailUrl, that.songArtImageThumbnailUrl) &&
+                Objects.equals(url, that.url) &&
+                Objects.equals(titleWithFeatured, that.titleWithFeatured) &&
+                Objects.equals(artistName, that.artistName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, fullTitle, title, songArtImageThumbnailUrl, url, titleWithFeatured, artistName);
     }
 
     public Favourites(int id, String fullTitle, String title, String songArtImageThumbnailUrl,

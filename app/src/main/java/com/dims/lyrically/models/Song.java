@@ -1,6 +1,7 @@
 package com.dims.lyrically.models;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Song implements Serializable {
     private String fullTitle, title, songArtImageThumbnailUrl, url, titleWithFeatured, artistName;
@@ -43,5 +44,24 @@ public class Song implements Serializable {
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Song song = (Song) o;
+        return id == song.id &&
+                Objects.equals(fullTitle, song.fullTitle) &&
+                Objects.equals(title, song.title) &&
+                Objects.equals(songArtImageThumbnailUrl, song.songArtImageThumbnailUrl) &&
+                Objects.equals(url, song.url) &&
+                Objects.equals(titleWithFeatured, song.titleWithFeatured) &&
+                Objects.equals(artistName, song.artistName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fullTitle, title, songArtImageThumbnailUrl, url, titleWithFeatured, artistName, id);
     }
 }

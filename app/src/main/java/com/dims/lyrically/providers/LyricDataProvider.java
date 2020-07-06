@@ -18,7 +18,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public  class LyricDataProvider{
-    private String queryResult;
     public LyricDataProvider(){}
 
     /**
@@ -38,11 +37,9 @@ public  class LyricDataProvider{
                 .addHeader("x-rapidapi-host", "genius.p.rapidapi.com")
                 .addHeader("x-rapidapi-key", context.getResources().getString(R.string.api_key))
                 .build();
-        final String[] JSONResponse = new String[1];
-        final Response[] httpResponse = new Response[1];
 
+        //enqueue enables an asynchronous call and retrieval of the result via a callback
         client.newCall(request)
-                //enqueue enables an asynchronous call and retrieval of the result via a callback
                 .enqueue(callback);
     }
 

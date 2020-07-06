@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="histViewModel"
+            type="com.dims.lyrically.HistViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".HistFragment">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/hist_recycler"
+            android:name="com.dims.lyrically.HistFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:context=".HistFragment"
+            tools:listitem="@layout/list_item" />
+
+    </FrameLayout>
+</layout>

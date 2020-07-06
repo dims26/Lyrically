@@ -13,11 +13,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activities.LyricDetailActivity">
+        <activity
+            android:name=".NavActivity"
+            android:theme="@style/NoActionBar">
+            <!--Specify navGraph, to enable receiving and handling deep links-->
+            <nav-graph android:value="@navigation/nav_graph"/>
         </activity>
+        <activity android:name=".activities.LyricDetailActivity"></activity>
         <activity
             android:name=".activities.SearchActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"

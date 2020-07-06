@@ -25,6 +25,8 @@ import com.dims.lyrically.models.Song;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,7 +57,7 @@ public class FavouritesFragment extends Fragment{
             @Override
             public void run() {
                 mAdapter.mFavourites.clear();
-                mAdapter.mFavourites.addAll(db.favouritesDao().getFavourites());
+                mAdapter.mFavourites.addAll(Objects.requireNonNull(db.favouritesDao().getFavourites().getValue()));
                 AppExecutors.getInstance().mainThread().execute(new Runnable() {
                     @Override
                     public void run() {

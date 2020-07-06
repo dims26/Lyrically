@@ -1,5 +1,6 @@
 package com.dims.lyrically.database;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -11,7 +12,7 @@ import java.util.List;
 @Dao
 public interface FavouritesDao {
     @Query("Select * from favourites Order by title_featured")
-    List<Favourites> getFavourites();
+    LiveData<List<Favourites>> getFavourites();
     @Insert
     void addFavourite(Favourites favourite);
     @Update

@@ -1,38 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:gravity="center_vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/listItem_song_thumbnail_imageView"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="4dp"
-        android:layout_gravity="center"
-        app:srcCompat="@drawable/baseline_image_24"
-        android:contentDescription="@string/song_thumbnail_image_view_contentDescription" />
+    <data>
+        <variable
+            name="song"
+            type="com.dims.lyrically.models.Song" />
+    </data>
 
     <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:padding="8dp"
         android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/listItem_titleFeatured_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:layout_marginBottom="4dp"/>
+        <ImageView
+            android:id="@+id/listItem_song_thumbnail_imageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="4dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/song_thumbnail_image_view_contentDescription"
+            app:srcCompat="@drawable/baseline_image_24"
+            app:thumbnail="@{song.songArtImageThumbnailUrl}" />
 
-        <TextView
-            android:id="@+id/listItem_artist_textView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/listItem_titleFeatured_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:layout_marginBottom="4dp"
+                app:titleWithFeatured="@{song.titleWithFeatured}" />
+
+            <TextView
+                android:id="@+id/listItem_artist_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                app:artistName="@{song.artistName}" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</layout>
