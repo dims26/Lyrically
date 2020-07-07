@@ -1,6 +1,5 @@
 package com.dims.lyrically
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.webkit.WebChromeClient
 import android.webkit.WebView
@@ -76,7 +75,7 @@ class Repository(private val db: LyricDatabase) {
         }
     }
 
-    fun search(query: String, indicator: MutableLiveData<LoadState>, songs: MutableList<Song>, context: Context) {
+    fun search(query: String, indicator: MutableLiveData<LoadState>, songs: MutableList<Song>, provider: LyricDataProvider) {
         fun getSearchCallback(): Callback {
             return object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
@@ -92,16 +91,21 @@ class Repository(private val db: LyricDatabase) {
                         val gson = gsonBuilder.create()
 
                         songs.clear()
-                        songs.addAll(gson.fromJson(response.body.toString(), object : TypeToken<MutableList<Song>>() {}.type))
+                        songs.addAll(gson.fromJson(response.body?.string(), object : TypeToken<Song>() {}.type))
+                        indicator.postValue(LoadState.LOADED)
                     }else{
                         indicator.postValue(LoadState.ERROR)
                         return }
-                    indicator.postValue(LoadState.LOADED)
                 }
             }
         }
+        provider.search(query, getSearchCallback())
+    }
 
-        LyricDataProvider().search(query, context, getSearchCallback())
+    suspend fun clearHistory() {
+        withContext(Dispatchers.IO){
+            db.historyDao().clearHistory()
+        }
     }
 }
 
@@ -142,7 +146,7 @@ class LyricWebViewClient(private val isVisible: MutableLiveData<Boolean>,
         isVisible.postValue(false)
     }
 
-    override fun onPageStarted(view: WebView, url: String, favicon: Bitmap) {
+    override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         progress.postValue(0)
         isVisible.postValue(true)

@@ -98,8 +98,8 @@ public class SearchActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 if (!query.equals("")){
                     recyclerAdapter.mSongs.clear();
-                    new LyricDataProvider().search(query,
-                            SearchActivity.this, getSongCallback());
+//                    new LyricDataProvider().search(query,
+//                            SearchActivity.this, getSongCallback());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -153,7 +153,8 @@ public class SearchActivity extends AppCompatActivity {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 //call SearchJSONParser and return ArrayList of model class
                 if (response.code() == 200) {
-                   ArrayList<Song> songs = new LyricDataProvider().extractJSONFeatures(response.body().string(), SearchActivity.this);
+//                   ArrayList<Song> songs = new LyricDataProvider().extractJSONFeatures(response.body().string(), SearchActivity.this);
+                    ArrayList<Song> songs = new ArrayList<>();
                    recyclerAdapter.mSongs.clear();
                    recyclerAdapter.mSongs.addAll(songs);
                    runOnUiThread(new Runnable() {

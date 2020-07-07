@@ -33,7 +33,7 @@ class HistoryRecyclerAdapter: ListAdapter<History, HistoryRecyclerAdapter.ViewHo
 
 class HistoryDiffCallback: DiffUtil.ItemCallback<History>() {
     override fun areItemsTheSame(oldItem: History, newItem: History): Boolean {
-        return oldItem === newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: History, newItem: History): Boolean {

@@ -1,7 +1,9 @@
 package com.dims.lyrically
 
+import androidx.annotation.Nullable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.dims.lyrically.database.Favourites
 import com.dims.lyrically.database.History
@@ -18,7 +20,7 @@ class DetailViewModel(private val repo: Repository): ViewModel() {
     private val _snackbar = MutableLiveData(-1)
     val snackbar: LiveData<Int> get() = _snackbar
 
-    private val _isVisible = MutableLiveData(false)
+    private val _isVisible = MutableLiveData(true)
     val isVisible: LiveData<Boolean>
         get() = _isVisible
 
@@ -26,13 +28,16 @@ class DetailViewModel(private val repo: Repository): ViewModel() {
     val progress: LiveData<Int>
             get() = _progress
 
+    val history = repo.history
+
     fun addToHistory(song: Song) {
         uiScope.launch {
             val hist = with(song){History(id, fullTitle,
                     title, songArtImageThumbnailUrl, url, titleWithFeatured, artistName)}
-            if (!repo.history.value!!.contains(hist)){
-                repo.addHistory(hist)
-
+            if (!repo.history.value!!
+                            .contains(hist)){
+                repo
+                        .addHistory(hist)
             }else{
                 repo.updateHistory(hist)
             }

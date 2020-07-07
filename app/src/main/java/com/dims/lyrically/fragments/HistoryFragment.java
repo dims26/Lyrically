@@ -119,7 +119,7 @@ public class HistoryFragment extends Fragment {
             @Override
             public void run() {
                 mAdapter.mHistory.clear();
-                mAdapter.mHistory.addAll(db.historyDao().getHistory());
+                mAdapter.mHistory.addAll(db.historyDao().getHistory().getValue());
                 AppExecutors.getInstance().mainThread().execute(new Runnable() {
                     @Override
                     public void run() {

@@ -30,7 +30,7 @@ class SearchRecyclerAdapter: ListAdapter<Song, SearchRecyclerAdapter.ViewHolder>
 
 class SearchDiffCallback: DiffUtil.ItemCallback<Song>() {
     override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean {
-        return oldItem === newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean {

@@ -30,7 +30,7 @@ class FavouritesRecyclerAdapter: ListAdapter<Favourites, FavouritesRecyclerAdapt
 
 class FavouritesDiffCallback: DiffUtil.ItemCallback<Favourites>() {
     override fun areItemsTheSame(oldItem: Favourites, newItem: Favourites): Boolean {
-        return oldItem === newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: Favourites, newItem: Favourites): Boolean {

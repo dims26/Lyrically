@@ -1,24 +1,27 @@
 package com.dims.lyrically
 
-import android.app.SearchManager
-import android.app.VoiceInteractor
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.core.content.ContextCompat.getSystemService
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.dims.lyrically.LoadState.*
 import com.dims.lyrically.database.LyricDatabase
 import com.dims.lyrically.databinding.FragmentSearchBinding
 import com.dims.lyrically.listeners.RecyclerViewClickListener
 import com.dims.lyrically.listeners.RecyclerViewTouchListener
-import com.dims.lyrically.LoadState.*
+import com.dims.lyrically.providers.LyricDataProvider
 import kotlinx.android.synthetic.main.activity_nav.*
 import kotlinx.android.synthetic.main.fragment_search.*
 
@@ -28,13 +31,22 @@ class SearchFragment : Fragment() {
     private lateinit var searchRecycler: RecyclerView
     private lateinit var db: LyricDatabase
     private lateinit var viewModel: SearchViewModel
+    private lateinit var searchProgressBar: ProgressBar
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
         binding.lifecycleOwner = this
+        setHasOptionsMenu(true)
 
-        search_progressBar.visibility = View.GONE
+        searchProgressBar = binding.root.findViewById(R.id.search_progressBar)
+        searchProgressBar.visibility = View.GONE
+
+        toolbar = binding.root.findViewById(R.id.toolbar)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+        NavigationUI.setupWithNavController(toolbar, NavHostFragment.findNavController(nav_container))
 
         db = LyricDatabase.getDbInstance(requireContext())
         val factory = ViewModelFactory(Repository(db))
@@ -57,25 +69,35 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val noResult = view.findViewById<TextView>(R.id.no_result_text)
         viewModel.loadingIndicator.observe(viewLifecycleOwner, Observer {
             when(it){
                 IDLE -> {
-                    search_progressBar.visibility = View.GONE
+                    noResult.visibility = View.GONE
+                    searchProgressBar.visibility = View.GONE
                     error.visibility = View.GONE
                 }
                 LOADING -> {
+                    noResult.visibility = View.GONE
                     error.visibility = View.GONE
                     mAdapter.submitList(null)
-                    search_progressBar.visibility = View.VISIBLE
+                    searchProgressBar.visibility = View.VISIBLE
                 }
                 LOADED -> {
                     error.visibility = View.GONE
-                    search_progressBar.visibility = View.GONE
-                    mAdapter.submitList(viewModel.songs)
+                    searchProgressBar.visibility = View.GONE
+                    if (viewModel.songs.isEmpty()) {
+                        noResult.visibility = View.VISIBLE
+                    }
+                    else {
+                        view.findViewById<TextView>(R.id.no_result_text).visibility = View.GONE
+                        mAdapter.submitList(viewModel.songs)
+                    }
                 }
                 ERROR -> {
+                    noResult.visibility = View.GONE
                     mAdapter.submitList(null)
-                    search_progressBar.visibility = View.GONE
+                    searchProgressBar.visibility = View.GONE
                     error.visibility = View.VISIBLE
                 }
                 else -> {}
@@ -87,26 +109,26 @@ class SearchFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.search_menu, menu)
         val searchItem = menu.findItem(R.id.action_search)
-        val searchView = initSearchView(searchItem)
 
+        val searchView = initSearchView(searchItem)
         searchView.queryHint = "Song or Artist name"
         searchView.requestFocus() //sets the focus on searchView
 
-        searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if(!query.isNullOrBlank()) viewModel.search(query, requireContext())
-                return false
+                if(!query.isNullOrBlank()) viewModel.search(query, LyricDataProvider(requireActivity().applicationContext))
+                return true
             }
             override fun onQueryTextChange(newText: String?): Boolean {/*Nothing for now*/ return false}
         })
-
     }
 
-    private fun initSearchView(searchItem: MenuItem): androidx.appcompat.widget.SearchView {
-        val searchManager = getSystemService(requireContext(), SearchManager::class.java)
-        val searchView = searchItem.actionView as androidx.appcompat.widget.SearchView
-        searchView.setSearchableInfo(searchManager!!.getSearchableInfo(requireActivity().componentName))
+    private fun initSearchView(searchItem: MenuItem): SearchView {
+//        val searchManager = getSystemService(requireContext(), SearchManager::class.java)
+        val searchView = searchItem.actionView as SearchView
+//        searchView.setSearchableInfo(searchManager!!.getSearchableInfo(requireActivity().componentName))
         searchView.setIconifiedByDefault(false)
+        searchView.isFocusable = true
 
         // Get the Linear Layout
         val searchEditFrame = searchView.findViewById<LinearLayout>(R.id.search_edit_frame)

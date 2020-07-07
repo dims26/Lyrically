@@ -1,9 +1,15 @@
 package com.dims.lyrically
 
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.view.*
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.ProgressBar
+import androidx.annotation.Nullable
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +20,7 @@ import com.dims.lyrically.database.LyricDatabase
 import com.dims.lyrically.models.Song
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_nav.*
+
 
 class DetailFragment : Fragment() {
     private lateinit var db: LyricDatabase
@@ -36,7 +43,6 @@ class DetailFragment : Fragment() {
         toolbar.title = song.title
 
         detailProgressBar = view.findViewById(R.id.detail_progressBar)
-        detailProgressBar.visibility = View.GONE
         detailProgressBar.max = 100
 
         val factory = ViewModelFactory(Repository(db))
@@ -45,7 +51,19 @@ class DetailFragment : Fragment() {
         webView = view.findViewById(R.id.lyrics_webView)
         webView.webViewClient = viewModel.getLyricWebViewClient()
         webView.webChromeClient = viewModel.getLyricWebChromeClient()
+        //apply settings
+        webView.settings.setAppCachePath(requireContext().cacheDir.absolutePath)
+        webView.settings.setAppCacheEnabled(true)
+        webView.settings.allowFileAccess = true
         webView.settings.javaScriptEnabled = true
+        webView.settings.cacheMode = WebSettings.LOAD_DEFAULT
+
+        val isAvailable =
+                isNetworkAvailable()
+        if (!isAvailable){
+            webView.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+        }
+
         webView.loadUrl(song.url)
 
         val refresher = view.findViewById<SwipeRefreshLayout>(R.id.webView_refresher)
@@ -55,6 +73,25 @@ class DetailFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(requireContext(), ConnectivityManager::class.java)
+
+        return if (connectivityManager != null) {
+            if (Build.VERSION.SDK_INT < 23) {
+                val ni = connectivityManager.activeNetworkInfo
+                if (ni != null) {
+                    (ni.isConnected && ((ni.type == ConnectivityManager.TYPE_WIFI) or (ni.type == ConnectivityManager.TYPE_MOBILE)))
+                }else false
+            } else {
+                val n = connectivityManager.activeNetwork
+                if (n != null) {
+                    val nc = connectivityManager.getNetworkCapabilities(n)
+                    (nc!!.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) or nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI))
+                }else false
+            }
+        }else false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,7 +108,14 @@ class DetailFragment : Fragment() {
             else if (it == 2)
                 Snackbar.make(requireView(), "Removed from favourites", Snackbar.LENGTH_SHORT).show()
         })
-        viewModel.addToHistory(song)
+        //Add to history when the livedata is populated, then remove the livedata
+        val observer= object : Observer<Any> {
+            override fun onChanged(@Nullable o: Any?) {
+                viewModel.addToHistory(song)
+                viewModel.history.removeObserver(this)
+            }
+        }
+        viewModel.history.observeForever(observer)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

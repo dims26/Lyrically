@@ -8,10 +8,26 @@
     <fragment
         android:id="@+id/histFragment"
         android:name="com.dims.lyrically.HistFragment"
-        android:label="fragment_hist"
-        tools:layout="@layout/fragment_hist" />
+        android:label="@string/title_history"
+        tools:layout="@layout/fragment_hist" >
+        <action
+            android:id="@+id/action_histFragment_to_favFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popUpTo="@id/favFragment"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
     <fragment
         android:id="@+id/favFragment"
         android:name="com.dims.lyrically.FavFragment"
-        android:label="FavFragment" />
+        android:label="@string/title_favourites" >
+        <action
+            android:id="@+id/action_favFragment_to_nav_graph_home"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popUpTo="@id/nav_graph_home"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
 </navigation>

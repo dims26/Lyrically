@@ -32,11 +32,11 @@ public class MainActivity extends AppCompatActivity {
             transaction.addToBackStack(null);//prevents crashing from quick switching, check documentation for understanding
 
             switch (item.getItemId()) {
-                case R.id.favouritesFragment:
+                case R.id.favFragment:
                     transaction.replace(R.id.fragment_container, favouritesFragment);//Change method to add() if it crashes
                     transaction.commit();
                     return true;
-                case R.id.historyFragment:
+                case R.id.histFragment:
                     transaction.replace(R.id.fragment_container, historyFragment);//Change method to add() if it crashes
                     transaction.commit();
                     return true;
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             transaction.replace(R.id.fragment_container, favouritesFragment);
             transaction.commit();
 
-            navView.setSelectedItemId(R.id.favouritesFragment);
+            navView.setSelectedItemId(R.id.favFragment);
         }
     }
 }

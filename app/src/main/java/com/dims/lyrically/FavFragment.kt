@@ -16,7 +16,6 @@ import com.dims.lyrically.databinding.FragmentFavBinding
 import com.dims.lyrically.listeners.RecyclerViewClickListener
 import com.dims.lyrically.listeners.RecyclerViewTouchListener
 import com.dims.lyrically.models.Song
-import kotlinx.android.synthetic.main.activity_nav.*
 import kotlinx.android.synthetic.main.fragment_fav.*
 
 class FavFragment : Fragment() {
@@ -46,14 +45,14 @@ class FavFragment : Fragment() {
                 mAdapter.submitList(it)
             }
         })
-        favRecycler.addOnItemTouchListener(RecyclerViewTouchListener(activity, fav_recycler, object: RecyclerViewClickListener{
+        favRecycler.addOnItemTouchListener(RecyclerViewTouchListener(activity, favRecycler, object: RecyclerViewClickListener{
             override fun onClick(view: View?, position: Int) {
                 val song: Song
                 with(mAdapter.currentList[position]){
                     song = Song(fullTitle, title, songArtImageThumbnailUrl, url, titleWithFeatured, id, artistName)}
                 val action =
                         HomeFragmentDirections.actionHomeFragmentToDetailFragment(song)
-                NavHostFragment.findNavController(nav_container).navigate(action)
+                NavHostFragment.findNavController(requireParentFragment().requireParentFragment()).navigate(action)
             }
             override fun onLongClick(view: View?, position: Int) {
                 AlertDialog.Builder(activity)

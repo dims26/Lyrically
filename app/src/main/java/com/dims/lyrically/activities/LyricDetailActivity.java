@@ -83,7 +83,7 @@ public class LyricDetailActivity extends AppCompatActivity {
             @Override
             public void run() {
                 int historyFlag = 0;
-                ArrayList<History> historyArrayList = (ArrayList<History>) db.historyDao().getHistory();
+                ArrayList<History> historyArrayList = (ArrayList<History>) db.historyDao().getHistory().getValue();
                 final History history = new History(song.getId(), song.getFullTitle(), song.getTitle(),
                         song.getSongArtImageThumbnailUrl(), song.getUrl(), song.getTitleWithFeatured(),
                         song.getArtistName());
@@ -122,7 +122,7 @@ public class LyricDetailActivity extends AppCompatActivity {
                             song.getSongArtImageThumbnailUrl(), song.getUrl(), song.getTitleWithFeatured(),
                             song.getArtistName());
                     int favFlag = 0;
-                    ArrayList<Favourites> favouritesArrayList = (ArrayList<Favourites>) db.favouritesDao().getFavourites();
+                    ArrayList<Favourites> favouritesArrayList = (ArrayList<Favourites>) db.favouritesDao().getFavourites().getValue();
                     for (Favourites dbFav : favouritesArrayList){
                         if (dbFav.getId() == fav.getId()){
                             favFlag = 1;

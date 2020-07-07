@@ -2,10 +2,8 @@ package com.dims.lyrically
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import android.view.*
+import androidx.databinding.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,13 +14,13 @@ import com.dims.lyrically.databinding.FragmentHistBinding
 import com.dims.lyrically.listeners.RecyclerViewClickListener
 import com.dims.lyrically.listeners.RecyclerViewTouchListener
 import com.dims.lyrically.models.Song
-import kotlinx.android.synthetic.main.activity_nav.*
 
 class HistFragment : Fragment() {
 
     private val mAdapter = HistoryRecyclerAdapter()
     private lateinit var binding: FragmentHistBinding
     private lateinit var db: LyricDatabase
+    private lateinit var viewModel: HistViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -34,7 +32,7 @@ class HistFragment : Fragment() {
 
         //initialize viewModel, get data and update adapter list
         val factory = ViewModelFactory(Repository(db))
-        val viewModel = ViewModelProvider(this, factory).get(HistViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory).get(HistViewModel::class.java)
         binding.histViewModel = viewModel
         val histRecycler = binding.histRecycler
         histRecycler.adapter = mAdapter
@@ -54,7 +52,8 @@ class HistFragment : Fragment() {
                 }
                 val action =
                         HomeFragmentDirections.actionHomeFragmentToDetailFragment(song)
-                NavHostFragment.findNavController(nav_container).navigate(action)
+                //Go up two steps to HomeFragment to navigate
+                NavHostFragment.findNavController(requireParentFragment().requireParentFragment()).navigate(action)
             }
 
             override fun onLongClick(view: View?, position: Int) {

@@ -20,10 +20,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
     </style>
 
     <style name="NoActionBar.ProgressBar" parent="NoActionBar">
-        <item name="android:progressTint">@android:color/white</item>
+        <item name="android:progressTint">@android:color/holo_red_light</item>
         <item name="android:progressBackgroundTint">@color/colorPrimary</item>
     </style>
 

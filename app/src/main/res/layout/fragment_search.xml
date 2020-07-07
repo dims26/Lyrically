@@ -20,6 +20,7 @@
             android:layout_height="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
             android:background="@color/colorPrimary"
+            app:contentInsetStartWithNavigation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -42,6 +43,17 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
+        <TextView
+            android:id="@+id/no_result_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_results"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/search_recyclerView"
+            app:layout_constraintEnd_toEndOf="@+id/search_recyclerView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ProgressBar
             android:id="@+id/search_progressBar"
             style="?android:attr/progressBarStyle"
@@ -59,12 +71,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/error_indicator_contentDescription"
+            android:visibility="gone"
+            android:src="@drawable/ic_error_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            tools:srcCompat="@drawable/ic_error_icon"
-            android:visibility="gone"/>
+            app:layout_constraintTop_toBottomOf="@id/toolbar"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

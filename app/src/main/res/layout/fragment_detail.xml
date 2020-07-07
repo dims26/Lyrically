@@ -25,6 +25,7 @@
         android:layout_height="8dp"
         android:padding="0dp"
         android:theme="@style/NoActionBar.ProgressBar"
+        android:progress="5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
