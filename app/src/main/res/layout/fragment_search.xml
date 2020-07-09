@@ -6,25 +6,24 @@
     <data>
         <variable
             name="searchViewModel"
-            type="com.dims.lyrically.SearchViewModel" />
+            type="com.dims.lyrically.screens.search.SearchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SearchFragment">
+        tools:context=".screens.search.SearchFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
+            android:theme="@style/AppToolBar"
             android:background="@color/colorPrimary"
             app:contentInsetStartWithNavigation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:titleTextColor="@android:color/white" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/search_recyclerView"
@@ -38,7 +37,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            tools:context=".SearchFragment"
+            tools:context=".screens.search.SearchFragment"
             tools:listitem="@layout/list_item">
 
         </androidx.recyclerview.widget.RecyclerView>
@@ -60,6 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/ic_fan_loader"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

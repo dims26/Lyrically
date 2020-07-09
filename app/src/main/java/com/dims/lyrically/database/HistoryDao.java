@@ -8,6 +8,8 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.dims.lyrically.models.History;
+
 import java.util.List;
 
 @Dao
@@ -22,4 +24,6 @@ public interface HistoryDao {
     void deleteFromHistory(History history);
     @Query("DELETE FROM history")
     void clearHistory();
+    @Query("SELECT COUNT(*) from history where id = :id")
+    int usersCount(int id);
 }

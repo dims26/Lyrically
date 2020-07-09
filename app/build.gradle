@@ -6,7 +6,7 @@ apply plugin: 'androidx.navigation.safeargs'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.dims.lyrically"
         minSdkVersion 21
@@ -29,7 +29,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
@@ -45,7 +45,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     //Third party libraries for http connection and image retrieval and loading
-    implementation 'com.squareup.okhttp3:okhttp:4.3.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.4.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     //Room
@@ -58,4 +58,7 @@ dependencies {
 
     //Gson
     implementation 'com.google.code.gson:gson:2.8.6'
+
+    //about page
+    implementation 'com.github.medyo:android-about-page:1.3'
 }

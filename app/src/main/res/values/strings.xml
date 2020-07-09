@@ -1,13 +1,17 @@
 <resources>
     <string name="app_name">Lyrically</string>
+    <string name="app_description">Lyric searching and bookmarking application</string>
     <string name="title_favourites">Favourites</string>
     <string name="title_history">History</string>
 
     <string name="search_menu_search_item">Search</string>
     <string name="song_thumbnail_image_view_contentDescription">song thumbnail image view</string>
     <string name="favourite_lyric">Mark as Favourite</string>
-    <string name="history_menu_action_clear">Clear</string>
+    <string name="home_menu_action_clear">Clear</string>
     <string name="cardItem_song_art_thumbnail">Song art thumbnail</string>
     <string name="error_indicator_contentDescription">Error Indicator</string>
     <string name="no_results">No results found</string>
+    <string name="home_menu_action_about">About</string>
+    <string name="title_text_view">Title</string>
+    <string name="artist_name_text_view">Artist name</string>
 </resources>

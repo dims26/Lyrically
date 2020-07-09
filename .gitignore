@@ -12,3 +12,6 @@
 /captures
 .externalNativeBuild
 /app/src/main/res/values/api.xml
+/app/src/main/res/drawable/ic_error_icon.xml
+/app/src/main/res/drawable/ic_fan_loader.xml
+/app/src/main/res/drawable-xxhdpi/no_image_bubbles.png

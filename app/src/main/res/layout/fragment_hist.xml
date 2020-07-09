@@ -6,13 +6,13 @@
     <data>
         <variable
             name="histViewModel"
-            type="com.dims.lyrically.HistViewModel" />
+            type="com.dims.lyrically.screens.history.HistViewModel" />
     </data>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".HistFragment">
+        tools:context=".screens.history.HistFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/hist_recycler"
@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:context=".HistFragment"
+            tools:context=".screens.history.HistFragment"
             tools:listitem="@layout/list_item" />
 
     </FrameLayout>

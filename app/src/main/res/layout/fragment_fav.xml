@@ -6,22 +6,23 @@
     <data>
         <variable
             name="favViewModel"
-            type="com.dims.lyrically.FavViewModel" />
+            type="com.dims.lyrically.screens.favourites.FavViewModel" />
     </data>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".FavFragment">
+        tools:context=".screens.favourites.FavFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fav_recycler"
             android:name="com.dims.lyrically.FavFragment"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
             app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
             app:spanCount="2"
-            tools:context=".FavFragment"
+            tools:context=".screens.favourites.FavFragment"
             tools:listitem="@layout/card_item" />
 
     </FrameLayout>

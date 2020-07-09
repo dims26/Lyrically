@@ -1,21 +1,5 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:textColorSecondary">@android:color/white</item>
-    </style>
-
-    <!--  Single-activity application theme  -->
     <style name="NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -23,9 +7,14 @@
         <item name="android:actionMenuTextColor">@android:color/white</item>
     </style>
 
+    <style name="NoActionBar.Popup" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:colorBackground">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
     <style name="NoActionBar.ProgressBar" parent="NoActionBar">
-        <item name="android:progressTint">@android:color/holo_red_light</item>
-        <item name="android:progressBackgroundTint">@color/colorPrimary</item>
+        <item name="android:progressTint">@color/colorSecondaryDark</item>
+        <item name="android:progressBackgroundTint">@color/colorSecondary</item>
     </style>
 
     <style name="AppToolBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -33,7 +22,7 @@
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 
-    <style name="AppTheme.Launcher">
+    <style name="NoActionBar.Launcher" parent="NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 

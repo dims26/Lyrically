@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/histFragment"
-        android:name="com.dims.lyrically.HistFragment"
+        android:name="com.dims.lyrically.screens.history.HistFragment"
         android:label="@string/title_history"
         tools:layout="@layout/fragment_hist" >
         <action
@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/favFragment"
-        android:name="com.dims.lyrically.FavFragment"
+        android:name="com.dims.lyrically.screens.favourites.FavFragment"
         android:label="@string/title_favourites" >
         <action
             android:id="@+id/action_favFragment_to_nav_graph_home"

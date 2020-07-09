@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    tools:context=".screens.home.HomeFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -12,11 +12,11 @@
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:theme="?attr/actionBarTheme"
+        android:theme="@style/AppToolBar"
+        app:popupTheme="@style/NoActionBar.Popup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@android:color/white"
         tools:title="Title"/>
 
     <fragment
@@ -40,7 +40,7 @@
         android:clickable="true"
         android:focusable="true"
         android:tint="@android:color/white"
-        app:backgroundTint="#66008780"
+        app:backgroundTint="@color/colorSecondaryDark"
         app:elevation="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"

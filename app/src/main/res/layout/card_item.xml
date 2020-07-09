@@ -5,7 +5,7 @@
     <data>
         <variable
             name="favourite"
-            type="com.dims.lyrically.database.Favourites" />
+            type="com.dims.lyrically.models.Favourites" />
     </data>
 
     <LinearLayout
@@ -34,9 +34,10 @@
                     android:id="@+id/cardItem_song_thumbnail_imageView"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    app:srcCompat="@drawable/baseline_image_24"
                     android:layout_marginBottom="4dp"
                     android:contentDescription="@string/cardItem_song_art_thumbnail"
+                    android:src="@drawable/no_image_bubbles"
+                    android:scaleType="centerInside"
                     app:thumbnail="@{favourite.songArtImageThumbnailUrl}"/>
 
                 <TextView
@@ -45,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:textAlignment="center"
-                    android:text="TextView"
+                    android:text="@string/title_text_view"
                     app:titleWithFeatured="@{favourite.titleWithFeatured}"/>
 
                 <TextView
@@ -56,7 +57,7 @@
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:textAlignment="center"
-                    android:text="TextView"
+                    android:text="@string/artist_name_text_view"
                     app:artistName="@{favourite.artistName}"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
