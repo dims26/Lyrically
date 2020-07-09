@@ -44,7 +44,10 @@ class FavFragment : Fragment() {
         favRecycler.adapter = mAdapter
         favRecycler.layoutManager = StaggeredGridLayoutManager(getNumberOfColumns(), StaggeredGridLayoutManager.VERTICAL)
 
+        val errorIndicator = binding.errorIndicator
+
         viewModel.favourites.observe(viewLifecycleOwner, Observer {
+            errorIndicator.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
             it?.let {
                 mAdapter.submitList(it)
             }

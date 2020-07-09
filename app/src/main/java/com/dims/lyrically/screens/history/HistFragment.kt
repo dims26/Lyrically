@@ -42,7 +42,10 @@ class HistFragment : Fragment() {
         histRecycler.adapter = mAdapter
         histRecycler.layoutManager = LinearLayoutManager(requireContext())
 
+        val errorIndicator = binding.errorIndicator
+
         viewModel.history.observe(viewLifecycleOwner, Observer {
+            errorIndicator.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
             it?.let {
                 mAdapter.submitList(it)
             }
