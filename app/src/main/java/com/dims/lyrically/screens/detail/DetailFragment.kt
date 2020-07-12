@@ -13,11 +13,11 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.dims.lyrically.R
-import com.dims.lyrically.utils.ViewModelFactory
-import com.dims.lyrically.models.Favourites
 import com.dims.lyrically.database.LyricDatabase
+import com.dims.lyrically.models.Favourites
 import com.dims.lyrically.models.Song
 import com.dims.lyrically.repository.Repository
+import com.dims.lyrically.utils.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_nav.*
 
 
@@ -38,6 +38,8 @@ class DetailFragment : Fragment() {
         db = LyricDatabase.getDbInstance(requireContext())
 
         song = arguments?.getSerializable("song") as Song
+
+        retainInstance = true
 
         val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
@@ -65,7 +67,8 @@ class DetailFragment : Fragment() {
             webView.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         }
 
-        webView.loadUrl(song.url)
+        if (savedInstanceState == null) webView.loadUrl(song.url)
+        else webView.restoreState(savedInstanceState)
 
         val refresher = view.findViewById<SwipeRefreshLayout>(R.id.webView_refresher)
         refresher.setOnRefreshListener {
@@ -86,6 +89,11 @@ class DetailFragment : Fragment() {
         })
         //observe db for data
         viewModel.setupDbLiveData(song)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        webView.saveState(outState)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

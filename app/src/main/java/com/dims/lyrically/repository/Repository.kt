@@ -2,6 +2,7 @@ package com.dims.lyrically.repository
 
 import android.graphics.Bitmap
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.lifecycle.LiveData
@@ -28,7 +29,8 @@ import java.lang.reflect.Type
 
 class Repository(private val db: LyricDatabase) {
     val favourites: LiveData<List<Favourites>> get() = _favourites
-    private val _favourites = db.favouritesDao().favourites
+    private val _favourites =
+            db.favouritesDao().favourites
     val history: LiveData<List<History>> get() = _history
     private val _history = db.historyDao().history
 
@@ -46,9 +48,9 @@ class Repository(private val db: LyricDatabase) {
         }
     }
 
-    suspend fun deleteFavourite(fav: Favourites) {
+    suspend fun deleteFromFavourite(favourite: Favourites) {
         withContext(Dispatchers.IO){
-            db.favouritesDao().deleteFromFavourite(fav)
+            db.favouritesDao().deleteFromFavourite(favourite)
         }
     }
 
@@ -70,53 +72,50 @@ class Repository(private val db: LyricDatabase) {
         }
     }
 
-    suspend fun deleteFromFavourite(favourite: Favourites) {
+    suspend fun clearHistory() {
         withContext(Dispatchers.IO){
-            db.favouritesDao().deleteFromFavourite(favourite)
+            db.historyDao().clearHistory()
         }
     }
 
-    suspend fun songInFavouritesCount(id: Int) : Int{
+    suspend fun itemInstancesInFavouritesCount(id: Int) : Int{
         return withContext(Dispatchers.IO){
             db.favouritesDao().usersCount(id)
         }
     }
-    suspend fun songInHistoryCount(id: Int) : Int{
+
+    suspend fun itemInstancesInHistoryCount(id: Int) : Int{
         return withContext(Dispatchers.IO){
             db.historyDao().usersCount(id)
         }
     }
 
     fun search(query: String, indicator: MutableLiveData<LoadState>, songs: MutableList<Song>, provider: LyricDataProvider) {
-        fun getSearchCallback(): Callback {
-            return object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    indicator.postValue(LoadState.ERROR)
-                }
-
-                override fun onResponse(call: Call, response: Response) {
-                    if (response.code == 200){
-                        val gsonBuilder = GsonBuilder()
-                        val deserializer = SongListDeserializer()
-                        gsonBuilder.registerTypeAdapter(Song::class.java, deserializer)
-
-                        val gson = gsonBuilder.create()
-
-                        songs.clear()
-                        songs.addAll(gson.fromJson(response.body?.string(), object : TypeToken<Song>() {}.type))
-                        indicator.postValue(LoadState.LOADED)
-                    }else{
-                        indicator.postValue(LoadState.ERROR)
-                        return }
-                }
-            }
-        }
-        provider.search(query, getSearchCallback())
+        provider.search(query, getSearchCallback(indicator, songs))
     }
 
-    suspend fun clearHistory() {
-        withContext(Dispatchers.IO){
-            db.historyDao().clearHistory()
+    fun getSearchCallback(indicator: MutableLiveData<LoadState>, songs: MutableList<Song>) : Callback {
+        return object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                indicator.postValue(LoadState.ERROR)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.code == 200) {
+                    val gsonBuilder = GsonBuilder()
+                    val deserializer = SongListDeserializer()
+                    gsonBuilder.registerTypeAdapter(Song::class.java, deserializer)
+
+                    val gson = gsonBuilder.create()
+
+                    songs.clear()
+                    songs.addAll(gson.fromJson(response.body?.string(), object : TypeToken<Song>() {}.type))
+                    indicator.postValue(LoadState.LOADED)
+                } else {
+                    indicator.postValue(LoadState.ERROR)
+                    return
+                }
+            }
         }
     }
 }

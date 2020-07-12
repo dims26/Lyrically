@@ -56,8 +56,7 @@ class DetailViewModel(private val repo: Repository): ViewModel() {
                         title, songArtImageThumbnailUrl, url, titleWithFeatured, artistName)
             }
             if (history.value != null){
-                if (
-                        repo.songInHistoryCount(song.id) > 0){
+                if (repo.itemInstancesInHistoryCount(song.id) > 0){
                     repo.updateHistory(hist)
                 }else{
                     repo.addHistory(hist)
@@ -71,8 +70,8 @@ class DetailViewModel(private val repo: Repository): ViewModel() {
                 Favourites(id, fullTitle, title, songArtImageThumbnailUrl,
                         url, titleWithFeatured, artistName)
             }
-            if (repo.songInFavouritesCount(song.id) > 0){
-                repo.deleteFavourite(fav)
+            if (repo.itemInstancesInFavouritesCount(song.id) > 0){
+                repo.deleteFromFavourite(fav)
             }
             else {
                 repo.addFavourite(fav)
