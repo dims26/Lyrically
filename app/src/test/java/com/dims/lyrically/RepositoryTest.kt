@@ -820,8 +820,6 @@ class RepositoryTest {
         provider.search(query, callback)
 
         assertEquals(expected, songs)
-        verify(provider).search(any(), eq(callback))
-        verify(callback).onResponse(call, response)
         verify(indicator).postValue(LoadState.LOADED)
     }
 
@@ -848,8 +846,6 @@ class RepositoryTest {
         provider.search(query, callback)
 
         assertEquals(expected, songs)
-        verify(provider).search(any(), eq(callback))
-        verify(callback).onResponse(call, response)
         verify(indicator, never()).postValue(any())
     }
 
@@ -863,7 +859,7 @@ class RepositoryTest {
         val callback = spy(repository.getSearchCallback(indicator, songs))
         val request = request(query)
         val response = response(request, 500, "server error")
-        val call = OkHttpClient().newCall(request)
+        val call = mock<Call>()
         val provider = mock<LyricDataProvider>{ lyricDataProvider ->
             on(lyricDataProvider.search(any(), eq(callback)))
                     .doAnswer{
@@ -875,8 +871,6 @@ class RepositoryTest {
         provider.search(query, callback)
 
         assertEquals(expected, songs)
-        verify(provider).search(any(), eq(callback))
-        verify(callback).onResponse(call, response)
         verify(indicator).postValue(LoadState.ERROR)
     }
 
@@ -888,9 +882,8 @@ class RepositoryTest {
         val songs = mutableListOf<Song>()
         val query = "Kendrick Lamar"
         val callback = spy(repository.getSearchCallback(indicator, songs))
-        val request = request(query)
-        val call = OkHttpClient().newCall(request)
-        val ioException = IOException("network query failed")
+        val call = mock<Call>()
+        val ioException = mock<IOException>()
         val provider = mock<LyricDataProvider>{ lyricDataProvider ->
             on(lyricDataProvider.search(any(), eq(callback)))
                     .doAnswer{
@@ -902,8 +895,6 @@ class RepositoryTest {
         provider.search(query, callback)
 
         assertEquals(expected, songs)
-        verify(provider).search(any(), eq(callback))
-        verify(callback).onFailure(call, ioException)
         verify(indicator).postValue(LoadState.ERROR)
     }
 

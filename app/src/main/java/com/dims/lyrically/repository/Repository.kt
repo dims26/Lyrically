@@ -13,10 +13,7 @@ import com.dims.lyrically.models.History
 import com.dims.lyrically.database.LyricDatabase
 import com.dims.lyrically.models.Song
 import com.dims.lyrically.utils.LyricDataProvider
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
+import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
