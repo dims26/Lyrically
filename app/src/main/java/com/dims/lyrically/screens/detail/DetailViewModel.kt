@@ -36,7 +36,7 @@ class DetailViewModel(private val repo: Repository): ViewModel() {
     val favourites = repo.favourites
     private lateinit var song: Song
 
-    private val histObserver= object : Observer<List<History>> {
+    private val histObserver = object : Observer<List<History>> {
         override fun onChanged(t: List<History>?) {
             if (t is List<History>)
             addToHistory(song)
@@ -60,7 +60,8 @@ class DetailViewModel(private val repo: Repository): ViewModel() {
                     repo.updateHistory(hist)
                 }else{
                     repo.addHistory(hist)
-                }}
+                }
+            }
         }
     }
 

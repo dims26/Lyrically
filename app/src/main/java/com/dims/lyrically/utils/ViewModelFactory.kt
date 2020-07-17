@@ -19,7 +19,7 @@ class ViewModelFactory(private val repository: Repository) : ViewModelProvider.F
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> DetailViewModel(repository) as T
             modelClass.isAssignableFrom(SearchViewModel::class.java) -> SearchViewModel(repository) as T
             modelClass.isAssignableFrom(HomeViewModel::class.java) -> HomeViewModel(repository) as T
-            else -> throw IllegalArgumentException("expected FavViewModel, got null")
+            else -> throw IllegalArgumentException("Unknown class")
         }
     }
 }

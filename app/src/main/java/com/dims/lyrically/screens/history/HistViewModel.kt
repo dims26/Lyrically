@@ -12,13 +12,14 @@ import kotlinx.coroutines.launch
 class HistViewModel(private val repo: Repository): ViewModel() {
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+    val history: LiveData<List<History>> get() = repo.history
+
     fun delete(history: History) {
         uiScope.launch {
             repo.deleteFromHistory(history)
         }
     }
-
-    val history: LiveData<List<History>> get() = repo.history
 
     override fun onCleared() {
         super.onCleared()

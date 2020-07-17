@@ -12,13 +12,14 @@ import kotlinx.coroutines.launch
 class FavViewModel(private val repo: Repository): ViewModel() {
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+    val favourites: LiveData<List<Favourites>> = repo.favourites
+
     fun delete(favourite: Favourites) {
         uiScope.launch {
             repo.deleteFromFavourite(favourite)
         }
     }
-
-    val favourites: LiveData<List<Favourites>> = repo.favourites
 
     override fun onCleared() {
         super.onCleared()
