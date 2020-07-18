@@ -17,7 +17,7 @@ import org.junit.Test
 class SearchViewModelTest {
 
     @get:Rule
-    val instantExecutionRule = InstantTaskExecutorRule()
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val songList = listOf(
             Song("..", "..", "..", "..", "..", 1, ".."),

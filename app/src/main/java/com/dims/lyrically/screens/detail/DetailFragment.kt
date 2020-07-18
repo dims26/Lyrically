@@ -1,11 +1,13 @@
 package com.dims.lyrically.screens.detail
 
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.*
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -62,7 +64,8 @@ class DetailFragment : Fragment() {
         webView.settings.javaScriptEnabled = true
         webView.settings.cacheMode = WebSettings.LOAD_DEFAULT
 
-        val isAvailable = viewModel.isNetworkAvailable(requireContext())
+        val cm = ContextCompat.getSystemService(requireContext(), ConnectivityManager::class.java)
+        val isAvailable = viewModel.isNetworkAvailable(cm)
         if (!isAvailable){
             webView.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         }
@@ -88,7 +91,7 @@ class DetailFragment : Fragment() {
             else detailProgressBar.visibility = View.GONE
         })
         //observe db for data
-        viewModel.setupDbLiveData(song)
+        viewModel.updateHistory(song)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

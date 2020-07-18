@@ -1,13 +1,8 @@
 package com.dims.lyrically.screens.detail
 
-import android.content.Context
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.dims.lyrically.models.Favourites
 import com.dims.lyrically.models.History
@@ -15,6 +10,7 @@ import com.dims.lyrically.models.Song
 import com.dims.lyrically.repository.LyricWebChromeClient
 import com.dims.lyrically.repository.LyricWebViewClient
 import com.dims.lyrically.repository.Repository
+import com.dims.lyrically.utils.NetworkUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -32,35 +28,18 @@ class DetailViewModel(private val repo: Repository): ViewModel() {
     val progress: LiveData<Int>
         get() = _progress
 
-    val history = repo.history
     val favourites = repo.favourites
-    private lateinit var song: Song
 
-    private val histObserver = object : Observer<List<History>> {
-        override fun onChanged(t: List<History>?) {
-            if (t is List<History>)
-            addToHistory(song)
-            history.removeObserver(this)
-        }
-    }
-
-    fun setupDbLiveData(song: Song){
-        this.song = song
-        history.observeForever(histObserver)
-    }
-
-    private fun addToHistory(song: Song) {
+    fun updateHistory(song: Song) {
         uiScope.launch {
             val hist = with(song){
                 History(id, fullTitle,
                         title, songArtImageThumbnailUrl, url, titleWithFeatured, artistName)
             }
-            if (history.value != null){
-                if (repo.itemInstancesInHistoryCount(song.id) > 0){
-                    repo.updateHistory(hist)
-                }else{
-                    repo.addHistory(hist)
-                }
+            if (repo.itemInstancesInHistoryCount(song.id) > 0){
+                repo.updateHistory(hist)
+            }else{
+                repo.addHistory(hist)
             }
         }
     }
@@ -73,8 +52,7 @@ class DetailViewModel(private val repo: Repository): ViewModel() {
             }
             if (repo.itemInstancesInFavouritesCount(song.id) > 0){
                 repo.deleteFromFavourite(fav)
-            }
-            else {
+            } else {
                 repo.addFavourite(fav)
             }
         }
@@ -87,25 +65,8 @@ class DetailViewModel(private val repo: Repository): ViewModel() {
         return repo.getLyricWebChromeClient(_progress)
     }
 
-    @Suppress("DEPRECATION")
-    fun isNetworkAvailable(context: Context): Boolean {
-        val connectivityManager = ContextCompat.getSystemService(context, ConnectivityManager::class.java)
-
-        return if (connectivityManager != null) {
-            if (Build.VERSION.SDK_INT < 23) {
-                val ni = connectivityManager.activeNetworkInfo
-                if (ni != null) {
-                    (ni.isConnected && ((ni.type == ConnectivityManager.TYPE_WIFI) or (ni.type == ConnectivityManager.TYPE_MOBILE)))
-                }else false
-            } else {
-                val n = connectivityManager.activeNetwork
-                if (n != null) {
-                    val nc = connectivityManager.getNetworkCapabilities(n)
-                    (nc!!.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) or nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI))
-                }else false
-            }
-        }else false
-    }
+    fun isNetworkAvailable(cm: ConnectivityManager?): Boolean =
+        cm?.let { NetworkUtils(cm).isNetworkAvailable() } ?: false
 
     override fun onCleared() {
         super.onCleared()
