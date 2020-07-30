@@ -6,6 +6,9 @@
         <variable
             name="favourite"
             type="com.dims.lyrically.models.Favourites" />
+        <variable
+            name="picasso"
+            type="com.squareup.picasso.Picasso" />
     </data>
 
     <LinearLayout
@@ -38,7 +41,8 @@
                     android:contentDescription="@string/cardItem_song_art_thumbnail"
                     android:src="@drawable/no_image_bubbles"
                     android:scaleType="centerInside"
-                    app:thumbnail="@{favourite.songArtImageThumbnailUrl}"/>
+                    app:thumbnail="@{favourite.songArtImageThumbnailUrl}"
+                    app:picasso="@{picasso}"/>
 
                 <TextView
                     android:id="@+id/cardItem_titleFeatured_textView"

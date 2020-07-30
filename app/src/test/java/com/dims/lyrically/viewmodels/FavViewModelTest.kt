@@ -1,4 +1,4 @@
-package com.dims.lyrically
+package com.dims.lyrically.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData

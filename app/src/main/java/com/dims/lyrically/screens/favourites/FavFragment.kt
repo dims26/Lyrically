@@ -20,10 +20,11 @@ import com.dims.lyrically.models.Song
 import com.dims.lyrically.repository.Repository
 import com.dims.lyrically.screens.home.HomeFragmentDirections
 import com.dims.lyrically.utils.ViewModelFactory
+import com.dims.lyrically.utils.picasso
 
 
 class FavFragment : Fragment() {
-    private val mAdapter = FavouritesRecyclerAdapter()
+    private val mAdapter = FavouritesRecyclerAdapter(picasso)
     private lateinit var binding: FragmentFavBinding
     private lateinit var db: LyricDatabase
 

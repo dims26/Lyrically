@@ -25,17 +25,21 @@ import com.dims.lyrically.listeners.RecyclerViewTouchListener
 import com.dims.lyrically.utils.LyricDataProvider
 import com.dims.lyrically.repository.Repository
 import com.dims.lyrically.utils.ViewModelFactory
+import com.dims.lyrically.utils.picasso
 import kotlinx.android.synthetic.main.activity_nav.*
 import kotlinx.android.synthetic.main.fragment_search.*
+import okhttp3.OkHttpClient
 
 class SearchFragment : Fragment() {
-    private val mAdapter = SearchRecyclerAdapter()
+    private val mAdapter = SearchRecyclerAdapter(picasso)
     private lateinit var binding: FragmentSearchBinding
     private lateinit var searchRecycler: RecyclerView
     private lateinit var db: LyricDatabase
     private lateinit var viewModel: SearchViewModel
     private lateinit var searchProgressBar: ProgressBar
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
+
+    private val okHttpClient = OkHttpClient()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -119,7 +123,7 @@ class SearchFragment : Fragment() {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if(!query.isNullOrBlank()) viewModel.search(query, LyricDataProvider(requireActivity().applicationContext))
+                if(!query.isNullOrBlank()) viewModel.search(query, LyricDataProvider(requireActivity().applicationContext, okHttpClient))
                 return true
             }
             override fun onQueryTextChange(newText: String?): Boolean {/*Nothing for now*/ return false}

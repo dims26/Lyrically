@@ -7,10 +7,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.dims.lyrically.databinding.ListItemBinding
 import com.dims.lyrically.models.Song
+import com.dims.lyrically.utils.picasso
+import com.squareup.picasso.Picasso
 
-class SearchRecyclerAdapter: ListAdapter<Song, SearchRecyclerAdapter.ViewHolder>(SearchDiffCallback()){
+class SearchRecyclerAdapter(private val picasso: Picasso): ListAdapter<Song, SearchRecyclerAdapter.ViewHolder>(SearchDiffCallback()){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return ViewHolder(ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false), picasso)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -20,9 +22,10 @@ class SearchRecyclerAdapter: ListAdapter<Song, SearchRecyclerAdapter.ViewHolder>
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    class ViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root){
+    class ViewHolder(private val binding: ListItemBinding, private val picasso: Picasso) : RecyclerView.ViewHolder(binding.root){
         fun bind(song: Song) {
             binding.song = song
+            binding.picasso = picasso
             binding.executePendingBindings()
         }
     }

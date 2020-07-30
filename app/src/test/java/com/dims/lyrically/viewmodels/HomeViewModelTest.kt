@@ -1,4 +1,4 @@
-package com.dims.lyrically
+package com.dims.lyrically.viewmodels
 
 import com.dims.lyrically.repository.Repository
 import com.dims.lyrically.screens.home.HomeViewModel

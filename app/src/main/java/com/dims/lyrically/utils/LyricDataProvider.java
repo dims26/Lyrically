@@ -10,9 +10,11 @@ import okhttp3.Request;
 
 public  class LyricDataProvider{
     private Context context;
+    private OkHttpClient client;
 
-    public LyricDataProvider(Context context){
+    public LyricDataProvider(Context context, OkHttpClient client){
         this.context = context;
+        this.client = client;
     }
 
     /**
@@ -21,9 +23,6 @@ public  class LyricDataProvider{
      *                 of the network call
      */
     public void search(String query, Callback callback) {
-
-        OkHttpClient client = new OkHttpClient();
-
         Request request = new Request.Builder()
                 .url("https://genius.p.rapidapi.com/search?q=" + query)
                 .get()

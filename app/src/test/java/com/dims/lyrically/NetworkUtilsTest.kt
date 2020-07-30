@@ -47,6 +47,7 @@ class NetworkUtilsTest {
         val networkInfo = ShadowNetworkInfo.newInstance(NetworkInfo.DetailedState.CONNECTED,
                 ConnectivityManager.TYPE_WIFI, 0, true, true)
         shadowConnectivityManager.setActiveNetworkInfo(networkInfo)
+
         val activeInfo = connectivityManager.activeNetworkInfo
 
         assertTrue(activeInfo != null && activeInfo.isConnected)

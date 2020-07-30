@@ -18,10 +18,11 @@ import com.dims.lyrically.models.Song
 import com.dims.lyrically.repository.Repository
 import com.dims.lyrically.screens.home.HomeFragmentDirections
 import com.dims.lyrically.utils.ViewModelFactory
+import com.dims.lyrically.utils.picasso
 
 class HistFragment : Fragment() {
 
-    private val mAdapter = HistoryRecyclerAdapter()
+    private val mAdapter = HistoryRecyclerAdapter(picasso)
     private lateinit var binding: FragmentHistBinding
     private lateinit var db: LyricDatabase
     private lateinit var viewModel: HistViewModel
