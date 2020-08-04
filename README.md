@@ -41,3 +41,5 @@ A simple lyric searching and bookmarking android application. Utilizes genius mu
 <string name="api_key">API_KEY</string>
 ```
 
+## Download
+<a href=https://appgallery.huawei.com/#/app/C102661707><img src=https://github.com/dims26/Lyrically/blob/master/App%20store%20documents/20200220_AppGallery_Badge_White.png align="left" height="125" width="300" ></a>
