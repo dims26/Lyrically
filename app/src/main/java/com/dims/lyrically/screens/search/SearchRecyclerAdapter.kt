@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.dims.lyrically.databinding.ListItemBinding
 import com.dims.lyrically.models.Song
-import com.dims.lyrically.utils.picasso
 import com.squareup.picasso.Picasso
 
 class SearchRecyclerAdapter(private val picasso: Picasso): ListAdapter<Song, SearchRecyclerAdapter.ViewHolder>(SearchDiffCallback()){

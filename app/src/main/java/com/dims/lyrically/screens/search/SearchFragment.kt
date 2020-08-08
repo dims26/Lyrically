@@ -6,7 +6,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -17,13 +16,13 @@ import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dims.lyrically.R
-import com.dims.lyrically.utils.LoadState.*
 import com.dims.lyrically.database.LyricDatabase
 import com.dims.lyrically.databinding.FragmentSearchBinding
 import com.dims.lyrically.listeners.RecyclerViewClickListener
 import com.dims.lyrically.listeners.RecyclerViewTouchListener
-import com.dims.lyrically.utils.LyricDataProvider
 import com.dims.lyrically.repository.Repository
+import com.dims.lyrically.utils.LoadState.*
+import com.dims.lyrically.utils.LyricDataProvider
 import com.dims.lyrically.utils.ViewModelFactory
 import com.dims.lyrically.utils.picasso
 import kotlinx.android.synthetic.main.activity_nav.*
@@ -38,6 +37,8 @@ class SearchFragment : Fragment() {
     private lateinit var viewModel: SearchViewModel
     private lateinit var searchProgressBar: ProgressBar
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    private lateinit var navBackImageView: ImageView
+    private lateinit var searchView: SearchView
 
     private val okHttpClient = OkHttpClient()
 
@@ -51,9 +52,26 @@ class SearchFragment : Fragment() {
         searchProgressBar = binding.root.findViewById(R.id.search_progressBar)
         searchProgressBar.visibility = View.GONE
 
+
+
         toolbar = binding.root.findViewById(R.id.toolbar)
-        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
-        NavigationUI.setupWithNavController(toolbar, NavHostFragment.findNavController(nav_container))
+
+        searchView = toolbar.findViewById(R.id.searchView)
+        searchView.onActionViewExpanded()
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if(!query.isNullOrBlank()) viewModel.search(query, LyricDataProvider(requireActivity().applicationContext, okHttpClient))
+                return true
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {/*Nothing for now*/ return false}
+        })
+
+        navBackImageView = toolbar.findViewById(R.id.ivNavBack)
+        val navController = NavHostFragment.findNavController(nav_container)
+        navBackImageView.setOnClickListener {
+
+            navController.navigateUp()
+        }
 
         db = LyricDatabase.getDbInstance(requireContext())
         val factory = ViewModelFactory(Repository(db))
@@ -67,7 +85,7 @@ class SearchFragment : Fragment() {
             override fun onClick(view: View?, position: Int) {
                 val action =
                         SearchFragmentDirections.actionSearchFragmentToDetailFragment(mAdapter.currentList[position])
-                NavHostFragment.findNavController(nav_container).navigate(action)
+                NavHostFragment.findNavController(this@SearchFragment).navigate(action)
             }
             override fun onLongClick(view: View?, position: Int) {/*Nothing*/ }
         }))
@@ -110,41 +128,5 @@ class SearchFragment : Fragment() {
                 else -> {}
             }
         })
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.search_menu, menu)
-        val searchItem = menu.findItem(R.id.action_search)
-
-        val searchView = initSearchView(searchItem)
-        searchView.queryHint = "Song or Artist name"
-        searchView.requestFocus() //sets the focus on searchView
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                if(!query.isNullOrBlank()) viewModel.search(query, LyricDataProvider(requireActivity().applicationContext, okHttpClient))
-                return true
-            }
-            override fun onQueryTextChange(newText: String?): Boolean {/*Nothing for now*/ return false}
-        })
-    }
-
-    private fun initSearchView(searchItem: MenuItem): SearchView {
-        val searchView = searchItem.actionView as SearchView
-        searchView.setIconifiedByDefault(false)
-        //request focus
-        searchView.isIconified = false
-        searchView.isFocusable = true
-
-        // Get the associated LayoutParams and set the leftMargin
-        val searchEditFrame = searchView.findViewById<LinearLayout>(R.id.search_edit_frame)
-        (searchEditFrame.layoutParams as LinearLayout.LayoutParams).leftMargin = 0
-
-        //Remove search icon to the left of the search edit text
-        val searchViewIcon = searchView.findViewById<ImageView>(R.id.search_mag_icon)
-        val linearLayoutSearchView = searchViewIcon.parent as ViewGroup
-        linearLayoutSearchView.removeView(searchViewIcon)
-        return searchView
     }
 }

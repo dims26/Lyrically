@@ -56,7 +56,7 @@ class HomeFragment : Fragment() {
         }
         searchButton.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToSearchFragment()
-            NavHostFragment.findNavController(nav_container).navigate(action)
+            NavHostFragment.findNavController(this).navigate(action)
         }
         return view
     }
