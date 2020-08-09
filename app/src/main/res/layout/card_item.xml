@@ -27,7 +27,7 @@
             app:cardElevation="4dp">
 
             <LinearLayout
-                android:layout_width="150dp"
+                android:layout_width="148dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="8dp"
@@ -35,8 +35,8 @@
 
                 <ImageView
                     android:id="@+id/cardItem_song_thumbnail_imageView"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="148dp"
+                    android:layout_height="148dp"
                     android:layout_marginBottom="4dp"
                     android:contentDescription="@string/cardItem_song_art_thumbnail"
                     android:src="@drawable/no_image_bubbles"
@@ -46,7 +46,7 @@
 
                 <TextView
                     android:id="@+id/cardItem_titleFeatured_textView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="148dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:textAlignment="center"

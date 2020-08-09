@@ -67,9 +67,9 @@ class SearchFragment : Fragment() {
         })
 
         navBackImageView = toolbar.findViewById(R.id.ivNavBack)
-        val navController = NavHostFragment.findNavController(nav_container)
+        val navController = NavHostFragment.findNavController(this)
         navBackImageView.setOnClickListener {
-
+            searchView.clearFocus()
             navController.navigateUp()
         }
 
@@ -85,7 +85,7 @@ class SearchFragment : Fragment() {
             override fun onClick(view: View?, position: Int) {
                 val action =
                         SearchFragmentDirections.actionSearchFragmentToDetailFragment(mAdapter.currentList[position])
-                NavHostFragment.findNavController(this@SearchFragment).navigate(action)
+                navController.navigate(action)
             }
             override fun onLongClick(view: View?, position: Int) {/*Nothing*/ }
         }))
@@ -129,4 +129,5 @@ class SearchFragment : Fragment() {
             }
         })
     }
+
 }
