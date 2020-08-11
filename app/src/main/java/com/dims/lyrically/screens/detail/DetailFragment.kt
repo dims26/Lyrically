@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.dims.lyrically.ActivityProvider
 import com.dims.lyrically.R
 import com.dims.lyrically.database.LyricDatabase
 import com.dims.lyrically.models.Favourites
@@ -25,11 +26,12 @@ import kotlinx.android.synthetic.main.activity_nav.*
 
 class DetailFragment : Fragment() {
     private lateinit var favMenuItem: MenuItem
-    private lateinit var db: LyricDatabase
+    private lateinit var repo: Repository
     private lateinit var webView: WebView
     private lateinit var detailProgressBar: ProgressBar
     private lateinit var song: Song
     private lateinit var viewModel: DetailViewModel
+    private lateinit var provider: ActivityProvider
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -37,21 +39,22 @@ class DetailFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_detail, container, false)
         setHasOptionsMenu(true)
 
-        db = LyricDatabase.getDbInstance(requireContext())
 
+        provider = arguments?.get("provider")!! as ActivityProvider
+        repo = provider.getRepo()
         song = arguments?.getSerializable("song") as Song
 
         retainInstance = true
 
         val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+        provider.setToolbarAsActionbar(toolbar)
         NavigationUI.setupWithNavController(toolbar, NavHostFragment.findNavController(nav_container))
         toolbar.title = song.title
 
         detailProgressBar = view.findViewById(R.id.detail_progressBar)
         detailProgressBar.max = 100
 
-        val factory = ViewModelFactory(Repository(db))
+        val factory = ViewModelFactory(repo)
         viewModel = ViewModelProvider(this, factory).get(DetailViewModel::class.java)
 
         webView = view.findViewById(R.id.lyrics_webView)
@@ -118,7 +121,5 @@ class DetailFragment : Fragment() {
 
         return true
     }
-
-
 }
 

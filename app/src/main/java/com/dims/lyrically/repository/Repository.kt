@@ -1,19 +1,23 @@
 package com.dims.lyrically.repository
 
 import android.graphics.Bitmap
+import android.os.Parcel
+import android.os.Parcelable
 import android.webkit.WebChromeClient
-import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.dims.lyrically.utils.LoadState
+import com.dims.lyrically.database.LyricDatabase
 import com.dims.lyrically.models.Favourites
 import com.dims.lyrically.models.History
-import com.dims.lyrically.database.LyricDatabase
 import com.dims.lyrically.models.Song
+import com.dims.lyrically.utils.LoadState
 import com.dims.lyrically.utils.LyricDataProvider
-import com.google.gson.*
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -24,12 +28,17 @@ import java.io.IOException
 import java.lang.reflect.Type
 
 
-class Repository(private val db: LyricDatabase) {
+class Repository(private val db:  LyricDatabase) : Parcelable {
     val favourites: LiveData<List<Favourites>> get() = _favourites
     private val _favourites =
             db.favouritesDao().favourites
     val history: LiveData<List<History>> get() = _history
     private val _history = db.historyDao().history
+
+    constructor(parcel: Parcel) : this(
+            db = parcel.readSerializable() as LyricDatabase
+    )
+
 
     fun getLyricWebViewClient(isVisible: MutableLiveData<Boolean>, progress: MutableLiveData<Int>): LyricWebViewClient {
         return LyricWebViewClient(isVisible, progress)
@@ -113,6 +122,24 @@ class Repository(private val db: LyricDatabase) {
                     return
                 }
             }
+        }
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeSerializable(db)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Repository> {
+        override fun createFromParcel(parcel: Parcel): Repository {
+            return Repository(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Repository?> {
+            return arrayOfNulls(size)
         }
     }
 }

@@ -1,9 +1,10 @@
 package com.dims.lyrically.screens.search
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
@@ -12,11 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.dims.lyrically.ActivityProvider
 import com.dims.lyrically.R
-import com.dims.lyrically.database.LyricDatabase
 import com.dims.lyrically.databinding.FragmentSearchBinding
 import com.dims.lyrically.listeners.RecyclerViewClickListener
 import com.dims.lyrically.listeners.RecyclerViewTouchListener
@@ -25,7 +25,6 @@ import com.dims.lyrically.utils.LoadState.*
 import com.dims.lyrically.utils.LyricDataProvider
 import com.dims.lyrically.utils.ViewModelFactory
 import com.dims.lyrically.utils.picasso
-import kotlinx.android.synthetic.main.activity_nav.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import okhttp3.OkHttpClient
 
@@ -33,12 +32,13 @@ class SearchFragment : Fragment() {
     private val mAdapter = SearchRecyclerAdapter(picasso)
     private lateinit var binding: FragmentSearchBinding
     private lateinit var searchRecycler: RecyclerView
-    private lateinit var db: LyricDatabase
     private lateinit var viewModel: SearchViewModel
     private lateinit var searchProgressBar: ProgressBar
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var navBackImageView: ImageView
     private lateinit var searchView: SearchView
+    private lateinit var repo: Repository
+    private lateinit var provider: ActivityProvider
 
     private val okHttpClient = OkHttpClient()
 
@@ -52,10 +52,11 @@ class SearchFragment : Fragment() {
         searchProgressBar = binding.root.findViewById(R.id.search_progressBar)
         searchProgressBar.visibility = View.GONE
 
-
+        provider = arguments?.get("provider") as ActivityProvider
+        repo = provider.getRepo()
 
         toolbar = binding.root.findViewById(R.id.toolbar)
-
+        //todo try setting toolbar as supportActionBar
         searchView = toolbar.findViewById(R.id.searchView)
         searchView.onActionViewExpanded()
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -73,8 +74,7 @@ class SearchFragment : Fragment() {
             navController.navigateUp()
         }
 
-        db = LyricDatabase.getDbInstance(requireContext())
-        val factory = ViewModelFactory(Repository(db))
+        val factory = ViewModelFactory(repo)
         viewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
 
         searchRecycler = binding.searchRecyclerView
@@ -84,7 +84,7 @@ class SearchFragment : Fragment() {
         searchRecycler.addOnItemTouchListener(RecyclerViewTouchListener(requireContext(), searchRecycler, object : RecyclerViewClickListener {
             override fun onClick(view: View?, position: Int) {
                 val action =
-                        SearchFragmentDirections.actionSearchFragmentToDetailFragment(mAdapter.currentList[position])
+                        SearchFragmentDirections.actionSearchFragmentToDetailFragment(mAdapter.currentList[position], provider)
                 navController.navigate(action)
             }
             override fun onLongClick(view: View?, position: Int) {/*Nothing*/ }

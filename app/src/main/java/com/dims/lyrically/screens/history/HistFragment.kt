@@ -2,30 +2,36 @@ package com.dims.lyrically.screens.history
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.view.*
-import androidx.databinding.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dims.lyrically.*
-import com.dims.lyrically.database.LyricDatabase
+import com.dims.lyrically.ActivityProvider
+import com.dims.lyrically.R
 import com.dims.lyrically.databinding.FragmentHistBinding
 import com.dims.lyrically.listeners.RecyclerViewClickListener
 import com.dims.lyrically.listeners.RecyclerViewTouchListener
 import com.dims.lyrically.models.Song
 import com.dims.lyrically.repository.Repository
 import com.dims.lyrically.screens.home.HomeFragmentDirections
+import com.dims.lyrically.screens.home.HomeProvider
 import com.dims.lyrically.utils.ViewModelFactory
 import com.dims.lyrically.utils.picasso
 
-class HistFragment : Fragment() {
+
+class HistFragment : Fragment(){
 
     private val mAdapter = HistoryRecyclerAdapter(picasso)
     private lateinit var binding: FragmentHistBinding
-    private lateinit var db: LyricDatabase
     private lateinit var viewModel: HistViewModel
+    private lateinit var provider: HomeProvider
+    private lateinit var repo: Repository
+    private lateinit var homeNavController: NavController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -33,10 +39,12 @@ class HistFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_hist, container, false)
         binding.lifecycleOwner = this
 
-        db = LyricDatabase.getDbInstance(requireContext())
+        provider = arguments?.getParcelable("provider")!!
+        repo = provider.getRepo()
+        homeNavController = provider.getHomeNavController()
 
-        //initialize viewModel, get data and update adapter list
-        val factory = ViewModelFactory(Repository(db))
+        //initialize viewModel, and setup recycler
+        val factory = ViewModelFactory(repo)
         viewModel = ViewModelProvider(this, factory).get(HistViewModel::class.java)
         binding.histViewModel = viewModel
         val histRecycler = binding.histRecycler
@@ -59,9 +67,9 @@ class HistFragment : Fragment() {
                     song = Song(fullTitle, title, songArtImageThumbnailUrl, url, titleWithFeatured, id, artistName)
                 }
                 val action =
-                        HomeFragmentDirections.actionHomeFragmentToDetailFragment(song)
+                        HomeFragmentDirections.actionHomeFragmentToDetailFragment(song, provider as ActivityProvider)
                 //Go up two steps to HomeFragment to navigate
-                NavHostFragment.findNavController(requireParentFragment().requireParentFragment()).navigate(action)
+                homeNavController.navigate(action)
             }
             override fun onLongClick(view: View?, position: Int) {
                 AlertDialog.Builder(activity)

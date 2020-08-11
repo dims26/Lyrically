@@ -35,6 +35,9 @@
         <argument
             android:name="song"
             app:argType="com.dims.lyrically.models.Song" />
+        <argument
+            android:name="provider"
+            app:argType="com.dims.lyrically.ActivityProvider" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -43,6 +46,9 @@
         <action
             android:id="@+id/action_searchFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
+        <argument
+            android:name="provider"
+            app:argType="com.dims.lyrically.ActivityProvider" />
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"

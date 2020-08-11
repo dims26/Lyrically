@@ -9,8 +9,12 @@ import androidx.room.RoomDatabase;
 import com.dims.lyrically.models.Favourites;
 import com.dims.lyrically.models.History;
 
+import java.io.Serializable;
+
+import kotlinx.android.parcel.Parcelize;
+
 @Database(entities = {Favourites.class, History.class}, exportSchema = false, version = 1)
-public abstract class LyricDatabase extends RoomDatabase {
+public abstract class LyricDatabase extends RoomDatabase implements Serializable {
     private static final String DATABASE_NAME = "lyric_database";
     private static LyricDatabase dbInstance;
 
