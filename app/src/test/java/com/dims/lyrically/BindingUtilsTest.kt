@@ -1,28 +1,46 @@
 package com.dims.lyrically
 
+import android.content.Context
+import android.net.Uri
+import android.os.Build
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.dims.lyrically.utils.artistName
+import com.dims.lyrically.utils.picasso
 import com.dims.lyrically.utils.thumbnail
 import com.dims.lyrically.utils.titleWithFeatured
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.*
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.RequestCreator
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
+
+private var picassoFlag = 0
 
 @RunWith(AndroidJUnit4::class)
+@Config(sdk = [Build.VERSION_CODES.O_MR1])
 class BindingUtilsTest {
 
     @get:Rule
     val exceptionRule: ExpectedException = ExpectedException.none()
+
+    @Before
+    fun setup(){
+        if (picassoFlag == 0) {
+            val context: Context = ApplicationProvider.getApplicationContext<Context>()
+            Picasso.setSingletonInstance(Picasso.Builder(context).build())
+            picassoFlag = 1
+        }
+    }
 
     private val textString = "TEST"
     private val emptyUrl = ""
@@ -30,12 +48,6 @@ class BindingUtilsTest {
     private val defaultImageUrl = "http://assets.genius.com/images/default_cover_image.png?10000"
     private val mockImageView = mock<ImageView>()
     private val mockTextView = mock<TextView>()
-
-    @Before
-    fun setup(){
-        val context = InstrumentationRegistry.getInstrumentation().context
-        Picasso.setSingletonInstance(Picasso.Builder(context).build())
-    }
 
     @Test
     fun test_titleBinder_loadsText(){
@@ -60,4 +72,16 @@ class BindingUtilsTest {
             assertEquals(expected, firstValue)
         }
     }
+
+//    @Test
+//    fun test_thumbNailBinder_loadsGivenCorrectUrl(){
+//        val givenUrl = properLikeUrl
+//        val picassoMock = mock<Picasso>()
+//
+//        thumbnail(mockImageView, givenUrl, picassoMock)
+//
+//        argumentCaptor<RequestCreator>().apply {
+//            verify(picassoMock, times(1)).load(givenUrl)
+//        }
+//    }
 }
