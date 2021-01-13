@@ -10,8 +10,7 @@ import com.dims.lyrically.models.Favourites;
 import com.dims.lyrically.models.History;
 
 import java.io.Serializable;
-
-import kotlinx.android.parcel.Parcelize;
+import com.dims.lyrically.database.MigrationsKt;
 
 @Database(entities = {Favourites.class, History.class}, exportSchema = false, version = 1)
 public abstract class LyricDatabase extends RoomDatabase implements Serializable {
@@ -20,8 +19,11 @@ public abstract class LyricDatabase extends RoomDatabase implements Serializable
 
     public static synchronized LyricDatabase getDbInstance(Context context){
         if (dbInstance == null){
-            dbInstance = Room.databaseBuilder(context.getApplicationContext(), LyricDatabase.class,
-                    DATABASE_NAME).fallbackToDestructiveMigration().build();
+            dbInstance = Room.databaseBuilder(context.getApplicationContext(),
+                    LyricDatabase.class,
+                    DATABASE_NAME)
+                    .addMigrations(MigrationsKt.getMIGRATION_1_2())
+                    .build();
         }
         return dbInstance;
     }
@@ -29,4 +31,5 @@ public abstract class LyricDatabase extends RoomDatabase implements Serializable
 
     public abstract FavouritesDao favouritesDao();
     public abstract HistoryDao historyDao();
+    public abstract SearchCacheDao searchCacheDao();//todo create migration adding search_cache table
 }
