@@ -8,11 +8,11 @@ import androidx.room.RoomDatabase;
 
 import com.dims.lyrically.models.Favourites;
 import com.dims.lyrically.models.History;
+import com.dims.lyrically.models.SearchCache;
 
 import java.io.Serializable;
-import com.dims.lyrically.database.MigrationsKt;
 
-@Database(entities = {Favourites.class, History.class}, exportSchema = false, version = 1)
+@Database(entities = {Favourites.class, History.class, SearchCache.class}, exportSchema = false, version = 2)
 public abstract class LyricDatabase extends RoomDatabase implements Serializable {
     private static final String DATABASE_NAME = "lyric_database";
     private static LyricDatabase dbInstance;
@@ -31,5 +31,5 @@ public abstract class LyricDatabase extends RoomDatabase implements Serializable
 
     public abstract FavouritesDao favouritesDao();
     public abstract HistoryDao historyDao();
-    public abstract SearchCacheDao searchCacheDao();//todo create migration adding search_cache table
+    public abstract SearchCacheDao searchCacheDao();
 }
