@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import com.dims.lyrically.database.LyricDatabase
 import com.dims.lyrically.models.Favourites
 import com.dims.lyrically.models.History
+import com.dims.lyrically.models.SearchCache
 import com.dims.lyrically.models.Song
 import com.dims.lyrically.utils.LoadState
 import com.dims.lyrically.utils.LyricDataProvider
@@ -19,13 +20,13 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 import java.lang.reflect.Type
+import kotlin.coroutines.coroutineContext
 
 
 class Repository(private val db:  LyricDatabase) : Parcelable {
@@ -96,8 +97,24 @@ class Repository(private val db:  LyricDatabase) : Parcelable {
         }
     }
 
+    suspend fun addCaches(caches: Array<SearchCache>){
+        withContext(Dispatchers.IO){
+            db.searchCacheDao().addCache(*caches)
+        }
+    }
+
     fun search(query: String, indicator: MutableLiveData<LoadState>, songs: MutableList<Song>, provider: LyricDataProvider) {
         provider.search(query, getSearchCallback(indicator, songs))
+    }
+
+    //Convert Song list to searchCache list and save to db
+    private fun saveCache(songs: List<Song>){
+        val searchCaches = songs.map{ song -> with(song){
+            SearchCache(id, fullTitle, title, songArtImageThumbnailUrl, url, titleWithFeatured, artistName)
+        } }.toTypedArray()
+        CoroutineScope(Dispatchers.IO).launch {
+            addCaches(searchCaches)
+        }
     }
 
     fun getSearchCallback(indicator: MutableLiveData<LoadState>, songs: MutableList<Song>) : Callback {
@@ -116,6 +133,7 @@ class Repository(private val db:  LyricDatabase) : Parcelable {
 
                     songs.clear()
                     songs.addAll(gson.fromJson(response.body?.string(), object : TypeToken<Song>() {}.type))
+                    saveCache(songs)//Save loaded song to search cache
                     indicator.postValue(LoadState.LOADED)
                 } else {
                     indicator.postValue(LoadState.ERROR)

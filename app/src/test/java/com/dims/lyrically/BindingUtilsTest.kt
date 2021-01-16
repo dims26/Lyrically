@@ -27,7 +27,7 @@ import org.robolectric.annotation.Config
 private var picassoFlag = 0
 
 @RunWith(AndroidJUnit4::class)
-@Config(sdk = [Build.VERSION_CODES.O_MR1])
+@Config(sdk = [Build.VERSION_CODES.O_MR1])//todo Remove after upgrading AndroidStudio to v4, should fix Robolectric require Java 9 issue
 class BindingUtilsTest {
 
     @get:Rule

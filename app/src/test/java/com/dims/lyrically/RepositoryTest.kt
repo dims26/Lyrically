@@ -1,6 +1,7 @@
 package com.dims.lyrically
 
 import android.content.Context
+import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
@@ -9,8 +10,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.dims.lyrically.database.FavouritesDao
 import com.dims.lyrically.database.HistoryDao
 import com.dims.lyrically.database.LyricDatabase
+import com.dims.lyrically.database.SearchCacheDao
 import com.dims.lyrically.models.Favourites
 import com.dims.lyrically.models.History
+import com.dims.lyrically.models.SearchCache
 import com.dims.lyrically.models.Song
 import com.dims.lyrically.repository.Repository
 import com.dims.lyrically.repository.SongListDeserializer
@@ -21,7 +24,9 @@ import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -32,8 +37,13 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
+import org.mockito.Spy
+import org.mockito.internal.verification.Times
+import org.robolectric.annotation.Config
 import java.io.IOException
 
+@ExperimentalCoroutinesApi
+@Config(sdk = [Build.VERSION_CODES.O_MR1])//Remove after upgrading AndroidStudio to v4, should fix Robolectric require Java 9 issue
 @RunWith(AndroidJUnit4::class)
 class RepositoryTest {
 
@@ -47,6 +57,7 @@ class RepositoryTest {
     private lateinit var db: LyricDatabase
     private lateinit var favDao: FavouritesDao
     private lateinit var histDao: HistoryDao
+    private lateinit var searchCacheDao: SearchCacheDao
     private val mockDb = mock<LyricDatabase>()
 
     private val jsonResponse = """
@@ -470,6 +481,16 @@ class RepositoryTest {
         return hists
     }
 
+    private fun getSearchCaches(times: Int) : List<SearchCache> {
+        val searchCaches = mutableListOf<SearchCache>()
+        for (i in 1..times){
+            val searchCache = SearchCache(i, "...", "...", "...", "...",
+                    "...", "...")
+            searchCaches.add(searchCache)
+        }
+        return searchCaches
+    }
+
     @Before
     fun setup(){
         //get applicationContext from Androidx test library
@@ -481,11 +502,13 @@ class RepositoryTest {
                 .build()
         favDao = spy(db.favouritesDao())
         histDao = spy(db.historyDao())
+        searchCacheDao = spy(db.searchCacheDao())
 
-        //consider breaking repository into two classes for favourites and history so you can pass
+        //consider breaking repository into three classes for favourites, history and searchCache so you can pass
         // in the daos instead of the db, and not mock the initial db and return both spied daos
         whenever(mockDb.favouritesDao()).thenReturn(favDao)
         whenever(mockDb.historyDao()).thenReturn(histDao)
+        whenever(mockDb.searchCacheDao()).thenReturn(searchCacheDao)
     }
 
     @After
@@ -777,7 +800,17 @@ class RepositoryTest {
     }
 
     @Test
-    //runBlocking blocks the thread till coroutine completion
+    fun test_AddCaches_multipleCacheItems() = runBlocking<Unit>{
+        val repository = spy(Repository(mockDb))
+        val caches = getSearchCaches(3).map { it }.toTypedArray()
+        val expected = caches.size
+
+        repository.addCaches(caches)
+
+        verify(searchCacheDao).addCache(eq(caches[0]), eq(caches[1]), eq(caches[2]))
+    }
+
+    @Test
     fun test_Search() {
         val repository = spy(Repository(mockDb))
         val indicator = mock<MutableLiveData<LoadState>>()
@@ -791,10 +824,11 @@ class RepositoryTest {
         verify(repository).getSearchCallback(indicator, songs)
     }
 
+
     @Test
     //runBlocking blocks the thread till coroutine completion
-    fun test_Callback_onSuccessfulResponse_correctJson() {
-        val repository = Repository(mockDb)
+    fun test_Callback_onSuccessfulResponse_correctJson() = runBlockingTest {
+        val repository = spy(Repository(mockDb))
         val indicator = mock<MutableLiveData<LoadState>>()
         val songs = mutableListOf<Song>()
         val query = "Kendrick"
@@ -821,10 +855,10 @@ class RepositoryTest {
 
         assertEquals(expected, songs)
         verify(indicator).postValue(LoadState.LOADED)
+        verify(repository).addCaches(any())
     }
 
     @Test
-    //runBlocking blocks the thread till coroutine completion
     fun test_Callback_onSuccessfulResponse_malformedJson() {
         val repository = Repository(mockDb)
         val indicator = mock<MutableLiveData<LoadState>>()
