@@ -17,6 +17,8 @@ import com.dims.lyrically.models.SearchCache
 import com.dims.lyrically.models.Song
 import com.dims.lyrically.repository.Repository
 import com.dims.lyrically.repository.SongListDeserializer
+import com.dims.lyrically.testUtils.CaseInsensitiveSubstringMatcher
+import com.dims.lyrically.testUtils.CaseInsensitiveSubstringMatcher.Companion.containsStringIgnoringCase
 import com.dims.lyrically.utils.LoadState
 import com.dims.lyrically.utils.LyricDataProvider
 import com.google.gson.GsonBuilder
@@ -30,15 +32,17 @@ import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
+import org.hamcrest.Matcher
+import org.hamcrest.Matchers
+import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
-import org.mockito.Spy
-import org.mockito.internal.verification.Times
 import org.robolectric.annotation.Config
 import java.io.IOException
 
@@ -649,7 +653,7 @@ class RepositoryTest {
 
         assertEquals(actual, expected)
         verify(histDao)
-                .history//verify favourites was called
+                .history
     }
 
     @Test
@@ -663,7 +667,7 @@ class RepositoryTest {
 
         assertEquals(actual[0].id, expected[0].id)
         verify(histDao)
-                .history//verify favourites was called
+                .history
     }
 
     @Test
@@ -679,7 +683,7 @@ class RepositoryTest {
 
         assertEquals(expected, actual)
         verify(histDao)
-                .history//verify favourites was called
+                .history
     }
 
     @Test
@@ -801,13 +805,106 @@ class RepositoryTest {
 
     @Test
     fun test_AddCaches_multipleCacheItems() = runBlocking<Unit>{
-        val repository = spy(Repository(mockDb))
-        val caches = getSearchCaches(3).map { it }.toTypedArray()
-        val expected = caches.size
+        val repository = Repository(mockDb)
+        val expected = getSearchCaches(3)
 
-        repository.addCaches(caches)
+        repository.addCaches(
+                expected.map { it }.toTypedArray()
+        )
 
-        verify(searchCacheDao).addCache(eq(caches[0]), eq(caches[1]), eq(caches[2]))
+        argumentCaptor<SearchCache> {
+            verify(searchCacheDao).addCache(capture())
+            assertThat(expected, equalTo(allValues))
+        }
+    }
+
+    @Test
+    fun test_getSimilarCaches_matchesSimilarTitleIgnoringCase() = runBlocking {
+        val repository = Repository(mockDb)
+        val caches = getSearchCaches(3).map { it }.toMutableList()
+        val similarCaches = getSearchCaches(2).map { cache ->
+            SearchCache(
+                    cache.id,
+                    cache.fullTitle,
+                    "Sandstorm",
+                    cache.songArtImageThumbnailUrl,
+                    cache.url,
+                    cache.titleWithFeatured,
+                    "Passenger"
+            )
+        }
+        caches.addAll(similarCaches)
+        searchCacheDao.addCache(*caches.map { it }.toTypedArray())
+        val query = "sand"
+
+        val actual = repository.getCaches(query)
+
+        argumentCaptor<String> {
+            verify(searchCacheDao).getSearchCache(capture())
+            assertThat(query, equalTo(firstValue))
+        }
+        assertThat(actual.size, equalTo(similarCaches.size))
+        assertThat(
+                actual.map { it.title },
+                everyItem(containsStringIgnoringCase(query))
+        )
+    }
+
+    @Test
+    fun test_getSimilarCaches_matchesSimilarArtistName() = runBlocking {
+        val repository = Repository(mockDb)
+        val caches = getSearchCaches(3).map { it }.toMutableList()
+        val similarCaches = getSearchCaches(2).map { cache ->
+            SearchCache(
+                    cache.id,
+                    cache.fullTitle,
+                    "Sandstorm",
+                    cache.songArtImageThumbnailUrl,
+                    cache.url,
+                    cache.titleWithFeatured,
+                    "Passenger"
+            )
+        }
+        caches.addAll(similarCaches)
+        searchCacheDao.addCache(*caches.map { it }.toTypedArray())
+        val query = "passen"
+
+        val actual = repository.getCaches(query)
+
+        argumentCaptor<String> {
+            verify(searchCacheDao).getSearchCache(capture())
+            assertThat(query, equalTo(firstValue))
+        }
+        assertThat(actual.size, equalTo(similarCaches.size))
+        assertThat(
+                actual.map { it.artistName },
+                everyItem(containsStringIgnoringCase(query))
+        )
+    }
+
+    @Test
+    fun test_getSimilarCaches_matchesSimilarAndLimitedTo20() = runBlocking {
+        val repository = Repository(mockDb)
+        val caches = getSearchCaches(3).map { it }.toMutableList()
+        val similarCaches = getSearchCaches(21).map { cache ->
+            SearchCache(
+                    cache.id,
+                    cache.fullTitle,
+                    "Sandstorm",
+                    cache.songArtImageThumbnailUrl,
+                    cache.url,
+                    cache.titleWithFeatured,
+                    "Passenger"
+            )
+        }
+        caches.addAll(similarCaches)
+        searchCacheDao.addCache(*caches.map { it }.toTypedArray())
+        val query = "sand"
+        val expected = 20
+
+        val actual = repository.getCaches(query)
+
+        assertThat(actual.size, equalTo(expected))
     }
 
     @Test

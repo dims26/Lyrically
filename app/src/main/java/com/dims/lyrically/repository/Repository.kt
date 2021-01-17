@@ -103,11 +103,20 @@ class Repository(private val db:  LyricDatabase) : Parcelable {
         }
     }
 
+    suspend fun getCaches(query: String): List<SearchCache> {
+        lateinit var result : List<SearchCache>
+        withContext(Dispatchers.IO) {
+            result = db.searchCacheDao().getSearchCache(query)
+        }
+        return result
+    }
+
     fun search(query: String, indicator: MutableLiveData<LoadState>, songs: MutableList<Song>, provider: LyricDataProvider) {
         provider.search(query, getSearchCallback(indicator, songs))
     }
 
-    //Convert Song list to searchCache list and save to db
+    /** Map [songs] to a list of [SearchCache] and save to database
+     */
     private fun saveCache(songs: List<Song>){
         val searchCaches = songs.map{ song -> with(song){
             SearchCache(id, fullTitle, title, songArtImageThumbnailUrl, url, titleWithFeatured, artistName)
