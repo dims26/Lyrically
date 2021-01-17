@@ -46,6 +46,34 @@ public class Song implements Serializable {
         return id;
     }
 
+    public void setFullTitle(String fullTitle) {
+        this.fullTitle = fullTitle;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setSongArtImageThumbnailUrl(String songArtImageThumbnailUrl) {
+        this.songArtImageThumbnailUrl = songArtImageThumbnailUrl;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setTitleWithFeatured(String titleWithFeatured) {
+        this.titleWithFeatured = titleWithFeatured;
+    }
+
+    public void setArtistName(String artistName) {
+        this.artistName = artistName;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
