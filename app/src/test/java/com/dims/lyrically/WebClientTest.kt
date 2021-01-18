@@ -1,5 +1,6 @@
 package com.dims.lyrically
 
+import android.os.Build
 import android.webkit.WebView
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
@@ -13,8 +14,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
+@Config(sdk = [Build.VERSION_CODES.O_MR1])//todo Remove after upgrading AndroidStudio to v4, should fix Robolectric require Java 9 issue
 class WebClientTest {
 
     @get:Rule
