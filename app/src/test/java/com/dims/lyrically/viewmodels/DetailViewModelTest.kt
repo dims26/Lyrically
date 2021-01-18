@@ -23,7 +23,7 @@ import org.junit.Test
 class DetailViewModelTest {
 
     @get:Rule
-    val instantTaskEXecutorRule = InstantTaskExecutorRule()
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val mainThreadSurrogate = TestCoroutineDispatcher()
     private lateinit var repository : Repository
