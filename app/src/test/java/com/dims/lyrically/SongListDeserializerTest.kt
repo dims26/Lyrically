@@ -1,5 +1,6 @@
 package com.dims.lyrically
 
+import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.dims.lyrically.models.Song
@@ -12,6 +13,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ErrorCollector
 import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
 class SongListDeserializerTest {
@@ -68,6 +70,7 @@ class SongListDeserializerTest {
     )
 
     @Test
+    @Config(sdk = [Build.VERSION_CODES.LOLLIPOP_MR1])
     fun test_deserializer_correctJson(){
         val json = JsonParser.parseString(jsonString)
         val expected = songs
@@ -78,6 +81,7 @@ class SongListDeserializerTest {
     }
 
     @Test(expected = IllegalStateException::class)
+    @Config(sdk = [Build.VERSION_CODES.LOLLIPOP_MR1])
     fun test_deserializer_malformedjson(){
         val json = spy<JsonElement>(JsonParser.parseString("jsonString"))
 

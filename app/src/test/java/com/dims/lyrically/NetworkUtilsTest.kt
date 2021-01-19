@@ -42,8 +42,8 @@ class NetworkUtilsTest {
 
     @Suppress("DEPRECATION", "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     @Test
+    @Config(sdk = [Build.VERSION_CODES.LOLLIPOP_MR1])
     fun test_connectivityManagerModifiable() {
-        ReflectionHelpers.setStaticField(Build.VERSION::class.java, "SDK_INT", 18)
         val networkInfo = ShadowNetworkInfo.newInstance(NetworkInfo.DetailedState.CONNECTED,
                 ConnectivityManager.TYPE_WIFI, 0, true, true)
         shadowConnectivityManager.setActiveNetworkInfo(networkInfo)
@@ -56,8 +56,8 @@ class NetworkUtilsTest {
 
     @Suppress("DEPRECATION")
     @Test
+    @Config(sdk = [Build.VERSION_CODES.LOLLIPOP_MR1])
     fun test_isNetworkAvailable_pre23Build_mobileNetworkConnected() {
-        ReflectionHelpers.setStaticField(Build.VERSION::class.java, "SDK_INT", 20)
         val networkInfo = ShadowNetworkInfo.newInstance(NetworkInfo.DetailedState.CONNECTED,
                 ConnectivityManager.TYPE_MOBILE, 0, true, true)
         shadowConnectivityManager.setActiveNetworkInfo(networkInfo)
@@ -69,8 +69,8 @@ class NetworkUtilsTest {
 
     @Suppress("DEPRECATION")
     @Test
+    @Config(sdk = [Build.VERSION_CODES.LOLLIPOP_MR1])
     fun test_isNetworkAvailable_pre23Build_wifiNetworkConnected() {
-        ReflectionHelpers.setStaticField(Build.VERSION::class.java, "SDK_INT", 20)
         val networkInfo = ShadowNetworkInfo.newInstance(NetworkInfo.DetailedState.CONNECTED,
                 ConnectivityManager.TYPE_WIFI, 0, true, true)
         shadowConnectivityManager.setActiveNetworkInfo(networkInfo)
@@ -82,8 +82,8 @@ class NetworkUtilsTest {
 
     @Suppress("DEPRECATION")
     @Test
+    @Config(sdk = [Build.VERSION_CODES.LOLLIPOP_MR1])
     fun test_isNetworkAvailable_pre23Build_otherNetworkConnected() {
-        ReflectionHelpers.setStaticField(Build.VERSION::class.java, "SDK_INT", 20)
         val networkInfo = ShadowNetworkInfo.newInstance(NetworkInfo.DetailedState.CONNECTED,
                 ConnectivityManager.TYPE_WIMAX, 0, true, true)
         shadowConnectivityManager.setActiveNetworkInfo(networkInfo)
@@ -95,8 +95,8 @@ class NetworkUtilsTest {
 
     @Suppress("DEPRECATION")
     @Test
+    @Config(sdk = [Build.VERSION_CODES.LOLLIPOP_MR1])
     fun test_isNetworkAvailable_pre23Build_disconnected() {
-        ReflectionHelpers.setStaticField(Build.VERSION::class.java, "SDK_INT", 20)
         val networkInfo = ShadowNetworkInfo.newInstance(NetworkInfo.DetailedState.DISCONNECTED,
                 ConnectivityManager.TYPE_MOBILE, 0, true, NetworkInfo.State.DISCONNECTED)
         shadowConnectivityManager.setActiveNetworkInfo(networkInfo)
