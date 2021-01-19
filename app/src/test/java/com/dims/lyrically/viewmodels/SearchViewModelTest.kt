@@ -10,9 +10,7 @@ import com.dims.lyrically.screens.search.SearchViewModel
 import com.dims.lyrically.utils.LoadState
 import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
@@ -25,8 +23,11 @@ import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 
 @ExperimentalCoroutinesApi
+@RunWith(JUnit4::class)
 class SearchViewModelTest {
 
     @get:Rule
@@ -48,14 +49,15 @@ class SearchViewModelTest {
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(mainThreadSurrogate)
         repository = mock()
         viewModel = SearchViewModel(repository)
+        Dispatchers.setMain(mainThreadSurrogate)
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain() // reset main dispatcher to the original Main dispatcher
+        mainThreadSurrogate.cleanupTestCoroutines()
     }
 
     @Test
@@ -107,19 +109,23 @@ class SearchViewModelTest {
     }
 
     @Test
+    //todo fix failing test
     fun test_searchCache() = runBlockingTest {
         val cacheLoadIndicatorObserver = mock<Observer<LoadState>>()
-        val query = ""
-        val expected = searchCaches
-        whenever(repository.getCaches(eq(query))).thenReturn(expected)
+        val query = "Spa"
+        val caches = searchCaches
+        val expected = caches.map {
+            Song(it.fullTitle, it.title, it.songArtImageThumbnailUrl, it.url, it.titleWithFeatured, it.id, it.artistName)
+        }
+        whenever(repository.getCaches(eq(query))).thenReturn(caches)
         viewModel.cacheLoadingIndicator.observeForever(cacheLoadIndicatorObserver)
 
         viewModel.searchCache(query)
 
-        mainThreadSurrogate.advanceTimeBy(1500)
+        mainThreadSurrogate.advanceTimeBy(1000)
         verify(repository).getCaches(eq(query))
         verify(cacheLoadIndicatorObserver, times(1)).onChanged(LoadState.LOADING)
         verify(cacheLoadIndicatorObserver, times(1)).onChanged(LoadState.LOADED)
-        assertEquals(viewModel.searchCaches, expected)
+        assertEquals(viewModel.songCaches, expected)
     }
 }

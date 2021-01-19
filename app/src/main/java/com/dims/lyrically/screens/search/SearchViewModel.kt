@@ -14,11 +14,13 @@ import kotlinx.coroutines.*
 
 class SearchViewModel(private val repo: Repository) : ViewModel() {
 
+    private lateinit var textChangeJob : Job
+
     private val _songs = mutableListOf<Song>()
     val songs: List<Song> get() = _songs
 
-    private val _searchCaches = mutableListOf<SearchCache>()
-    val searchCaches: List<SearchCache> get() = _searchCaches
+    private val _songCaches = mutableListOf<Song>()
+    val songCaches: List<Song> get() = _songCaches
 
     private val _loadingIndicator = MutableLiveData(IDLE)
     val loadingIndicator: LiveData<LoadState> get() = _loadingIndicator
@@ -26,22 +28,33 @@ class SearchViewModel(private val repo: Repository) : ViewModel() {
     private val _cacheLoadingIndicator = MutableLiveData(IDLE)
     val cacheLoadingIndicator: LiveData<LoadState> get() = _cacheLoadingIndicator
 
+    init {
+        textChangeJob = Job()
+    }
+
     fun search(query: String, provider: LyricDataProvider) {
         _loadingIndicator.value = LOADING
         repo.search(query, _loadingIndicator, _songs, provider)
     }
 
-    fun searchCache(query: String){
+    fun searchCache(query: String) {
         _cacheLoadingIndicator.value = LOADING
 
-        if (viewModelScope.coroutineContext.isActive)
-            viewModelScope.coroutineContext.cancel()
+        if (textChangeJob.isActive)
+            textChangeJob.cancel()
 
-        viewModelScope.launch {
+        textChangeJob = viewModelScope.launch {
             delay(1000)
-            _searchCaches.clear()
-            _searchCaches.addAll(repo.getCaches(query))
+            val songs = repo.getCaches(query)
+                    .map { Song(it.fullTitle, it.title, it.songArtImageThumbnailUrl, it.url, it.titleWithFeatured, it.id, it.artistName) }
+            _songCaches.clear()
+            _songCaches.addAll(songs)
             _cacheLoadingIndicator.postValue(LOADED)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        textChangeJob.cancel()
     }
 }
