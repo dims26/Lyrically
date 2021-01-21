@@ -5,5 +5,5 @@ import androidx.navigation.NavController
 import com.dims.lyrically.ActivityProvider
 
 interface HomeProvider : Parcelable, ActivityProvider {
-    fun getHomeNavController(): NavController
+    fun getHomeNavController(): NavController?
 }

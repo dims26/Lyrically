@@ -31,7 +31,6 @@ class HistFragment : Fragment(){
     private lateinit var viewModel: HistViewModel
     private lateinit var provider: HomeProvider
     private lateinit var repo: Repository
-    private lateinit var homeNavController: NavController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -41,7 +40,6 @@ class HistFragment : Fragment(){
 
         provider = arguments?.getParcelable("provider")!!
         repo = provider.getRepo()
-        homeNavController = provider.getHomeNavController()
 
         //initialize viewModel, and setup recycler
         val factory = ViewModelFactory(repo)
@@ -69,7 +67,7 @@ class HistFragment : Fragment(){
                 val action =
                         HomeFragmentDirections.actionHomeFragmentToDetailFragment(song, provider as ActivityProvider)
                 //Go up two steps to HomeFragment to navigate
-                homeNavController.navigate(action)
+                provider.getHomeNavController()?.navigate(action)
             }
             override fun onLongClick(view: View?, position: Int) {
                 AlertDialog.Builder(activity)

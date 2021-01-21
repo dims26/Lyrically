@@ -30,7 +30,6 @@ class FavFragment : Fragment() {
     private val mAdapter = FavouritesRecyclerAdapter(picasso)
     private lateinit var binding: FragmentFavBinding
     private lateinit var repo: Repository
-    private lateinit var homeNavController: NavController
     private lateinit var provider: HomeProvider
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +40,6 @@ class FavFragment : Fragment() {
 
         provider = arguments?.getParcelable("provider")!!
         repo = provider.getRepo()
-        homeNavController = provider.getHomeNavController()
 
         //initialize viewModel, and setup recyclerView
         val factory = ViewModelFactory(repo)
@@ -67,7 +65,7 @@ class FavFragment : Fragment() {
                     song = Song(fullTitle, title, songArtImageThumbnailUrl, url, titleWithFeatured, id, artistName)}
                 val action =
                         HomeFragmentDirections.actionHomeFragmentToDetailFragment(song, provider as ActivityProvider)
-                homeNavController.navigate(action)
+                provider.getHomeNavController()?.navigate(action)
             }
             override fun onLongClick(view: View?, position: Int) {
                 AlertDialog.Builder(activity)

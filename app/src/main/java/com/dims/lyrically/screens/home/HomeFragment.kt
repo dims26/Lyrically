@@ -41,7 +41,15 @@ class HomeFragment : Fragment(), HomeProvider {
     @IgnoredOnParcel
     private lateinit var provider: ActivityProvider
 
-    override fun getHomeNavController(): NavController = NavHostFragment.findNavController(this)
+    private fun Fragment.findNavControllerSafely(): NavController? {
+        return if (isAdded) {
+            NavHostFragment.findNavController(this)
+        } else {
+            null
+        }
+    }
+
+    override fun getHomeNavController(): NavController? = findNavControllerSafely()
     override fun getRepo(): Repository = provider.getRepo()
     override fun setToolbarAsActionbar(toolbar: Toolbar) { provider.setToolbarAsActionbar(toolbar) }
 
