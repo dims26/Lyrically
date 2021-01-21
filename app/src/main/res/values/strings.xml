@@ -18,4 +18,5 @@
     <string name="get_to_searching">Get to searching</string>
     <string name="search_hint">Song or Artist name</string>
     <string name="nav_back_button_contentDescription">back button</string>
+    <string name="cache_recycler_block_marker">FROM PREVIOUS SEARCH</string>
 </resources>

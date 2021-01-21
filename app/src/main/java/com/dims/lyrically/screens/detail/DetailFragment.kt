@@ -66,6 +66,8 @@ class DetailFragment : Fragment() {
         webView.settings.allowFileAccess = true
         webView.settings.javaScriptEnabled = true
         webView.settings.cacheMode = WebSettings.LOAD_DEFAULT
+        //testing
+//        webView.settings.domStorageEnabled = true
 
         val cm = ContextCompat.getSystemService(requireContext(), ConnectivityManager::class.java)
         val isAvailable = viewModel.isNetworkAvailable(cm)
