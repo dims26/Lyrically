@@ -26,6 +26,7 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 import java.lang.reflect.Type
+import java.util.*
 import kotlin.coroutines.coroutineContext
 
 
@@ -40,6 +41,11 @@ class Repository(private val db:  LyricDatabase) : Parcelable {
             db = parcel.readSerializable() as LyricDatabase
     )
 
+    init {
+        CoroutineScope(Dispatchers.IO).launch {
+            trimCaches()
+        }
+    }
 
     fun getLyricWebViewClient(isVisible: MutableLiveData<Boolean>, progress: MutableLiveData<Int>): LyricWebViewClient {
         return LyricWebViewClient(isVisible, progress)
@@ -94,6 +100,12 @@ class Repository(private val db:  LyricDatabase) : Parcelable {
     suspend fun itemInstancesInHistoryCount(id: Int) : Int{
         return withContext(Dispatchers.IO){
             db.historyDao().usersCount(id)
+        }
+    }
+
+    private suspend fun trimCaches(){
+        withContext(Dispatchers.IO){
+            db.searchCacheDao().clearCache(Date())
         }
     }
 

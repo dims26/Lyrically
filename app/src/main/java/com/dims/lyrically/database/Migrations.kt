@@ -8,3 +8,9 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         database.execSQL("CREATE TABLE IF NOT EXISTS `search_cache` (`id` INTEGER NOT NULL, `full_title` TEXT NOT NULL, `title` TEXT NOT NULL, `thumbnail_url` TEXT NOT NULL, `url` TEXT NOT NULL, `title_featured` TEXT NOT NULL, `artist_name` TEXT NOT NULL, PRIMARY KEY(`id`))")
     }
 }
+
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE `search_cache` ADD COLUMN `expires` INTEGER DEFAULT 0 NOT NULL")
+    }
+}

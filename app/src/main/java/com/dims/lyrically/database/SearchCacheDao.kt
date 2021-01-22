@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.dims.lyrically.models.SearchCache
+import java.util.*
 
 const val GET_LIMIT = 20
 
@@ -16,6 +17,6 @@ interface SearchCacheDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addCache(vararg cache: SearchCache)
 
-    @Query("DELETE FROM search_cache")
-    fun clearCache()
+    @Query("DELETE FROM search_cache WHERE expires < :now")
+    fun clearCache(now: Date)
 }
