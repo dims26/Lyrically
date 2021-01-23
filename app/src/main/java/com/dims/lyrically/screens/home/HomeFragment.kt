@@ -2,9 +2,7 @@ package com.dims.lyrically.screens.home
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -22,9 +20,9 @@ import com.dims.lyrically.screens.history.HistFragment
 import com.dims.lyrically.utils.ViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.activity_nav.*
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+
 
 @Parcelize
 class HomeFragment : Fragment(), HomeProvider {
@@ -50,6 +48,8 @@ class HomeFragment : Fragment(), HomeProvider {
     }
 
     override fun getHomeNavController(): NavController? = findNavControllerSafely()
+    override fun getActivityNavContainer(): Fragment? = provider.getActivityNavContainer()
+
     override fun getRepo(): Repository = provider.getRepo()
     override fun setToolbarAsActionbar(toolbar: Toolbar) { provider.setToolbarAsActionbar(toolbar) }
 
@@ -150,7 +150,7 @@ class HomeFragment : Fragment(), HomeProvider {
             clearHistoryDialog.setMessage("Clear history?").show()
         } else if (item.itemId == R.id.action_about){
             val action = HomeFragmentDirections.actionHomeFragmentToAboutFragment()
-            NavHostFragment.findNavController(nav_container).navigate(action)
+            NavHostFragment.findNavController(getActivityNavContainer()!!).navigate(action)
         }
         return true
     }

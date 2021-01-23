@@ -6,7 +6,6 @@ import android.view.*
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.ProgressBar
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -16,12 +15,10 @@ import androidx.navigation.ui.NavigationUI
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.dims.lyrically.ActivityProvider
 import com.dims.lyrically.R
-import com.dims.lyrically.database.LyricDatabase
 import com.dims.lyrically.models.Favourites
 import com.dims.lyrically.models.Song
 import com.dims.lyrically.repository.Repository
 import com.dims.lyrically.utils.ViewModelFactory
-import kotlinx.android.synthetic.main.activity_nav.*
 
 
 class DetailFragment : Fragment() {
@@ -48,7 +45,7 @@ class DetailFragment : Fragment() {
 
         val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         provider.setToolbarAsActionbar(toolbar)
-        NavigationUI.setupWithNavController(toolbar, NavHostFragment.findNavController(nav_container))
+        NavigationUI.setupWithNavController(toolbar, NavHostFragment.findNavController(provider.getActivityNavContainer()!!))
         toolbar.title = song.title
 
         detailProgressBar = view.findViewById(R.id.detail_progressBar)
