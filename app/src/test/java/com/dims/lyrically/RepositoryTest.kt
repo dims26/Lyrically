@@ -924,7 +924,9 @@ class RepositoryTest {
 
     @Test
     //runBlocking blocks the thread till coroutine completion
-    fun test_Callback_onSuccessfulResponse_correctJson() = runBlockingTest {
+    //todo Dispatchers should always be injected, inject Dispatchers.IO to
+    // Repository to enable passing a test dispatcher and using runBlockingTest
+    fun test_Callback_onSuccessfulResponse_correctJson() = runBlocking {
         val repository = spy(Repository(mockDb))
         val indicator = mock<MutableLiveData<LoadState>>()
         val songs = mutableListOf<Song>()
