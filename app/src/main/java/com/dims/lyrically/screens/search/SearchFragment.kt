@@ -31,7 +31,6 @@ import com.dims.lyrically.utils.LoadState.*
 import com.dims.lyrically.utils.LyricDataProvider
 import com.dims.lyrically.utils.ViewModelFactory
 import com.dims.lyrically.utils.picasso
-import kotlinx.android.synthetic.main.fragment_search.*
 import okhttp3.OkHttpClient
 import kotlin.reflect.KProperty0
 

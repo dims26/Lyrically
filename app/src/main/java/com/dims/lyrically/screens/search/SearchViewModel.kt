@@ -4,17 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dims.lyrically.models.SearchCache
-import com.dims.lyrically.utils.LoadState.*
 import com.dims.lyrically.models.Song
-import com.dims.lyrically.utils.LyricDataProvider
 import com.dims.lyrically.repository.Repository
 import com.dims.lyrically.utils.LoadState
-import kotlinx.coroutines.*
+import com.dims.lyrically.utils.LoadState.*
+import com.dims.lyrically.utils.LyricDataProvider
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SearchViewModel(private val repo: Repository) : ViewModel() {
 
-    private lateinit var textChangeJob : Job
+    private var textChangeJob : Job
 
     private val _songs = mutableListOf<Song>()
     val songs: List<Song> get() = _songs
