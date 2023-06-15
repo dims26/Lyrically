@@ -12,7 +12,7 @@ import java.lang.IllegalArgumentException
 
 class ViewModelFactory(private val repository: Repository) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(FavViewModel::class.java) -> FavViewModel(repository) as T
             modelClass.isAssignableFrom(HistViewModel::class.java) -> HistViewModel(repository) as T
