@@ -58,7 +58,6 @@ class DetailFragment : Fragment() {
         webView.webViewClient = viewModel.getLyricWebViewClient()
         webView.webChromeClient = viewModel.getLyricWebChromeClient()
         //apply settings
-        webView.settings.cacheMode = WebSettings.LOAD_DEFAULT
         webView.settings.allowFileAccess = true
         webView.settings.javaScriptEnabled = true
         webView.settings.cacheMode = WebSettings.LOAD_DEFAULT
