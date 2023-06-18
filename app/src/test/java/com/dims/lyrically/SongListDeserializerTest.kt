@@ -4,7 +4,7 @@ import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.dims.lyrically.models.Song
-import com.dims.lyrically.repository.SongListDeserializer
+import com.dims.lyrically.utils.SongListDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import com.nhaarman.mockitokotlin2.spy
