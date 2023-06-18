@@ -16,7 +16,7 @@ import com.dims.lyrically.models.History
 import com.dims.lyrically.models.SearchCache
 import com.dims.lyrically.models.Song
 import com.dims.lyrically.repository.Repository
-import com.dims.lyrically.repository.SongListDeserializer
+import com.dims.lyrically.utils.SongListDeserializer
 import com.dims.lyrically.testUtils.CaseInsensitiveSubstringMatcher
 import com.dims.lyrically.testUtils.CaseInsensitiveSubstringMatcher.Companion.containsStringIgnoringCase
 import com.dims.lyrically.utils.LoadState

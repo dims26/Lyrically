@@ -2,20 +2,30 @@ package com.dims.lyrically.datasources
 
 import android.content.Context
 import com.dims.lyrically.R
+import com.dims.lyrically.models.Song
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Named
 
-class LyricsAPIDatasource @Inject constructor(private val context: Context,
-                                              private val client: OkHttpClient) {
+class LyricsAPIDatasource @Inject constructor(@ApplicationContext private val context: Context,
+                                              private val client: OkHttpClient,
+                                              @Named("DispatcherIO") private val dispatcher: CoroutineDispatcher,
+                                              @Named("GeniusGson") private val gson: Gson
+) {
 
     /**
      * @param query The query to be searched for
-     * @param callback The callback which defines the actions to be taken depending on the success
-     * of the network call
+     * @return A list of deserialised Song objects
      */
-    fun search(query: String, callback: Callback) {
+    suspend fun search(query: String) : List<Song> {
         val request: Request = Request.Builder()
             .url("https://genius-song-lyrics1.p.rapidapi.com/search/?q=$query&per_page=20")
             .get()
@@ -23,9 +33,12 @@ class LyricsAPIDatasource @Inject constructor(private val context: Context,
             .addHeader("X-RapidAPI-Key", context.resources.getString(R.string.api_key))
             .build()
 
+        return withContext(dispatcher) {
+            val response = client.newCall(request).execute()
 
-        //enqueue enables an asynchronous call and retrieval of the result via a callback
-        client.newCall(request)
-            .enqueue(callback)
+            if (response.code != 200) throw IOException()
+
+            gson.fromJson(response.body?.string(), object : TypeToken<Song>() {}.type)
+        }
     }
 }
