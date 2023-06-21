@@ -17,8 +17,20 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class HiltModules {
 
+    init {
+        System.loadLibrary("native-lib")
+    }
+
+
+    private external fun getTokenString(): String
 
     private val gsonBuilder: GsonBuilder  = GsonBuilder()
+
+    @Singleton
+    @Provides
+    @Named("TokenString")
+    fun provideTokenString(): String = getTokenString()
+
 
     @Singleton
     @Provides

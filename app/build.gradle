@@ -35,6 +35,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    externalNativeBuild {
+        // Encapsulates your CMake build configurations.
+        // For ndk-build, instead use the ndkBuild block.
+        cmake {
+            // Specifies a path to your CMake build script that's
+            // relative to the build.gradle file.
+            path "CMakeLists.txt"
+        }
+    }
 }
 
 dependencies {
