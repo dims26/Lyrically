@@ -1,6 +1,7 @@
 package com.dims.lyrically.repository
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import android.webkit.WebChromeClient
@@ -194,8 +195,7 @@ class Repository(private val db:  LyricDatabase) : Parcelable {
 class LyricWebViewClient(private val isVisible: MutableLiveData<Boolean>,
                          private val progress: MutableLiveData<Int>) : WebViewClient() {
     override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-        view.loadUrl(url)
-        return true
+        return !Uri.parse(url).host.equals("https://genius.com")
     }
 
     override fun onPageFinished(view: WebView, url: String) {
