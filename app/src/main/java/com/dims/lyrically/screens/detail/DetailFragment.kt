@@ -53,8 +53,9 @@ class DetailFragment : Fragment() {
         detailProgressBar.max = 100
 
         val factory = ViewModelFactory(repo)
-        viewModel = ViewModelProvider(this, factory).get(DetailViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
 
+        WebView.setWebContentsDebuggingEnabled(false)
         webView = view.findViewById(R.id.lyrics_webView)
         webView.webViewClient = viewModel.getLyricWebViewClient()
         webView.webChromeClient = viewModel.getLyricWebChromeClient()
