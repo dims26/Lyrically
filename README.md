@@ -42,4 +42,4 @@ A simple lyric searching and bookmarking android application. Utilizes genius mu
 ```
 
 ## Download
-<a href=https://appgallery.huawei.com/#/app/C102661707><img src=https://github.com/dims26/Lyrically/blob/master/App%20store%20documents/20200220_AppGallery_Badge_White.png align="left" height="125" width="300" ></a>
+<a href='https://play.google.com/store/apps/details?id=com.dims.lyrically&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
