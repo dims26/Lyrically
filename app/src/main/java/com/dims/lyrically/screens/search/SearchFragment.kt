@@ -22,18 +22,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dims.lyrically.ActivityProvider
 import com.dims.lyrically.R
 import com.dims.lyrically.databinding.FragmentSearchBinding
+import com.dims.lyrically.datasources.LyricsAPIDatasource
 import com.dims.lyrically.listeners.RecyclerViewClickListener
 import com.dims.lyrically.listeners.RecyclerViewTouchListener
 import com.dims.lyrically.models.Song
 import com.dims.lyrically.repository.Repository
 import com.dims.lyrically.utils.LoadState
-import com.dims.lyrically.utils.LoadState.*
-import com.dims.lyrically.utils.LyricDataProvider
+import com.dims.lyrically.utils.LoadState.ERROR
+import com.dims.lyrically.utils.LoadState.IDLE
+import com.dims.lyrically.utils.LoadState.LOADED
+import com.dims.lyrically.utils.LoadState.LOADING
 import com.dims.lyrically.utils.ViewModelFactory
 import com.dims.lyrically.utils.picasso
+import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.OkHttpClient
+import javax.inject.Inject
 import kotlin.reflect.KProperty0
 
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
     private val mAdapter = SearchRecyclerAdapter(picasso)
     private val mCacheAdapter = SearchRecyclerAdapter(picasso)
@@ -50,6 +56,7 @@ class SearchFragment : Fragment() {
     private lateinit var repo: Repository
     private lateinit var provider: ActivityProvider
     private lateinit var noResult : TextView
+    @Inject lateinit var lyricsAPIDatasource: LyricsAPIDatasource
 
     private val okHttpClient = OkHttpClient()
 
@@ -77,8 +84,9 @@ class SearchFragment : Fragment() {
                 if(!query.isNullOrBlank()) {
                     binding.cacheBlock.visibility = View.GONE
                     searchRecycler.visibility = View.VISIBLE
-                    viewModel.search(query, LyricDataProvider(requireActivity().applicationContext, okHttpClient))
+                    viewModel.search(query, lyricsAPIDatasource)
                 }
+                searchView.clearFocus()
                 return true
             }
             override fun onQueryTextChange(query: String?): Boolean {

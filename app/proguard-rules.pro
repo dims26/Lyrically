@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-dontwarn org.bouncycastle.**
+-dontwarn org.conscrypt.**
+-dontwarn org.openjsse.**
+#Keep names of serializable classes to prevent fix app crashes
+-keepnames class com.dims.lyrically.models.Song
+-keepnames class com.dims.lyrically.ActivityProvider

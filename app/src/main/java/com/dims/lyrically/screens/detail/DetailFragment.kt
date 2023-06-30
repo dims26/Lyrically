@@ -6,6 +6,7 @@ import android.view.*
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.ProgressBar
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -52,14 +53,13 @@ class DetailFragment : Fragment() {
         detailProgressBar.max = 100
 
         val factory = ViewModelFactory(repo)
-        viewModel = ViewModelProvider(this, factory).get(DetailViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
 
+        WebView.setWebContentsDebuggingEnabled(false)
         webView = view.findViewById(R.id.lyrics_webView)
         webView.webViewClient = viewModel.getLyricWebViewClient()
         webView.webChromeClient = viewModel.getLyricWebChromeClient()
         //apply settings
-        webView.settings.setAppCachePath(requireContext().cacheDir.absolutePath)
-        webView.settings.setAppCacheEnabled(true)
         webView.settings.allowFileAccess = true
         webView.settings.javaScriptEnabled = true
         webView.settings.cacheMode = WebSettings.LOAD_DEFAULT
@@ -108,8 +108,8 @@ class DetailFragment : Fragment() {
             with(song){
                 if (it.contains(Favourites(id, fullTitle, title, songArtImageThumbnailUrl,
                                 url, titleWithFeatured, artistName))){
-                    favMenuItem.icon = requireContext().getDrawable(R.drawable.round_favorite_24)}
-                else favMenuItem.icon = requireContext().getDrawable(R.drawable.round_favorite_border_24)
+                    favMenuItem.icon = AppCompatResources.getDrawable(requireContext(), R.drawable.round_favorite_24)}
+                else favMenuItem.icon = AppCompatResources.getDrawable(requireContext(), R.drawable.round_favorite_border_24)
             }
         })
     }

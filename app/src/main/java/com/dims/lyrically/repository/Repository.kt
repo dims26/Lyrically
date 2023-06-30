@@ -1,6 +1,7 @@
 package com.dims.lyrically.repository
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import android.webkit.WebChromeClient
@@ -9,27 +10,27 @@ import android.webkit.WebViewClient
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.dims.lyrically.database.LyricDatabase
+import com.dims.lyrically.datasources.LyricsAPIDatasource
 import com.dims.lyrically.models.Favourites
 import com.dims.lyrically.models.History
 import com.dims.lyrically.models.SearchCache
 import com.dims.lyrically.models.Song
 import com.dims.lyrically.utils.LoadState
 import com.dims.lyrically.utils.LyricDataProvider
+import com.dims.lyrically.utils.SongListDeserializer
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
-import java.lang.reflect.Type
-import java.util.*
-import kotlin.coroutines.coroutineContext
+import java.util.Date
 
-
+//todo inject dispatchers and datasource, fix tests
 class Repository(private val db:  LyricDatabase) : Parcelable {
     val favourites: LiveData<List<Favourites>> get() = _favourites
     private val _favourites =
@@ -123,9 +124,17 @@ class Repository(private val db:  LyricDatabase) : Parcelable {
         return result
     }
 
+    //todo fix tests and remove, implementation switched to suspend function
     fun search(query: String, indicator: MutableLiveData<LoadState>, songs: MutableList<Song>, provider: LyricDataProvider) {
         provider.search(query, getSearchCallback(indicator, songs))
     }
+
+    suspend fun search(query: String, datasource: LyricsAPIDatasource) = //todo use injected datasource!
+        withContext(Dispatchers.IO) {//todo use injected dispatcher
+            val searchSongs = datasource.search(query)
+            saveCache(searchSongs)//Save loaded songs to search cache
+            return@withContext searchSongs
+        }
 
     /** Map [songs] to a list of [SearchCache] and save to database
      */
@@ -183,35 +192,10 @@ class Repository(private val db:  LyricDatabase) : Parcelable {
     }
 }
 
-class SongListDeserializer :  JsonDeserializer<List<Song>?> {
-    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): List<Song>? {
-        val jsonObject = json!!.asJsonObject
-        val response = jsonObject["response"].asJsonObject
-        val hits = response["hits"].asJsonArray
-
-        val songs = mutableListOf<Song>()
-        hits.forEach{
-            val currentHit = it.asJsonObject
-            if (currentHit["type"].asString != "song") return@forEach
-
-            val result = currentHit["result"].asJsonObject
-            val primaryArtist = result["primary_artist"].asJsonObject
-            songs.add(Song(
-                    result["full_title"].asString, result["title"].asString,
-                    result["song_art_image_thumbnail_url"].asString, result["url"].asString,
-                    result["title_with_featured"].asString, result["id"].asInt,
-                    primaryArtist["name"].asString
-            ))
-        }
-        return songs
-    }
-}
-
 class LyricWebViewClient(private val isVisible: MutableLiveData<Boolean>,
                          private val progress: MutableLiveData<Int>) : WebViewClient() {
     override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-        view.loadUrl(url)
-        return true
+        return !Uri.parse(url).host.equals("https://genius.com")
     }
 
     override fun onPageFinished(view: WebView, url: String) {

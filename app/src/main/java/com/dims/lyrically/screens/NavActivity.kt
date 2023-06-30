@@ -16,10 +16,12 @@ import com.dims.lyrically.R
 import com.dims.lyrically.database.LyricDatabase
 import com.dims.lyrically.repository.Repository
 import com.dims.lyrically.screens.search.SearchFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
+@AndroidEntryPoint
 class NavActivity : AppCompatActivity(), ActivityProvider {
 
     @IgnoredOnParcel

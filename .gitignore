@@ -17,3 +17,6 @@
 /app/src/main/res/drawable-xxhdpi/no_image_bubbles.png
 /app/src/main/res/drawable/ic_empty_box.xml
 /app/release/
+/app/src/main/res/drawable/no_image_bubbles.png
+/app/src/main/cpp/native-lib.cpp
+/app/.cxx/

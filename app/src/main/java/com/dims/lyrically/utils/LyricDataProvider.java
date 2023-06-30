@@ -2,12 +2,11 @@ package com.dims.lyrically.utils;
 
 import android.content.Context;
 
-import com.dims.lyrically.R;
-
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
+//todo delete and move tests to new implementation
 public  class LyricDataProvider{
     private Context context;
     private OkHttpClient client;
@@ -27,7 +26,7 @@ public  class LyricDataProvider{
                 .url("https://genius.p.rapidapi.com/search?q=" + query)
                 .get()
                 .addHeader("x-rapidapi-host", "genius.p.rapidapi.com")
-                .addHeader("x-rapidapi-key", context.getResources().getString(R.string.api_key))
+//                .addHeader("x-rapidapi-key", context.getResources().getString(R.string.api_key))
                 .build();
 
 
