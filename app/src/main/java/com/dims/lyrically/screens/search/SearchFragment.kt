@@ -86,6 +86,7 @@ class SearchFragment : Fragment() {
                     searchRecycler.visibility = View.VISIBLE
                     viewModel.search(query, lyricsAPIDatasource)
                 }
+                searchView.clearFocus()
                 return true
             }
             override fun onQueryTextChange(query: String?): Boolean {

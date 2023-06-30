@@ -8,10 +8,14 @@ import com.dims.lyrically.datasources.LyricsAPIDatasource
 import com.dims.lyrically.models.Song
 import com.dims.lyrically.repository.Repository
 import com.dims.lyrically.utils.LoadState
-import com.dims.lyrically.utils.LoadState.*
+import com.dims.lyrically.utils.LoadState.ERROR
+import com.dims.lyrically.utils.LoadState.IDLE
+import com.dims.lyrically.utils.LoadState.LOADED
+import com.dims.lyrically.utils.LoadState.LOADING
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 
 class SearchViewModel(private val repo: Repository) : ViewModel() {
 
@@ -41,6 +45,7 @@ class SearchViewModel(private val repo: Repository) : ViewModel() {
         if (searchJob.isActive) searchJob.cancel()
 
         searchJob = viewModelScope.launch {
+            yield()
             try {
                 val songs = repo.search(query, datasource)
                 _songs.clear()
