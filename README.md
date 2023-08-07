@@ -35,7 +35,7 @@ A simple lyric searching and bookmarking android application. Utilizes genius mu
  </tr>
 </table>
 
-**When cloning this application, be sure to obtain an API key from https://rapidapi.com/brianiswu/api/genius/endpointst and to update 
+**When cloning this application, be sure to obtain an API key from [RapidAPI](https://rapidapi.com/Glavier/api/genius-song-lyrics1) and to update 
 [Strings.xml](https://github.com/dims26/Lyrically/blob/master/app/src/main/res/values/strings.xml) like so:**
 ```xml
 <string name="api_key">API_KEY</string>
