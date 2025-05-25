@@ -58,14 +58,11 @@ class SearchFragment : Fragment() {
     private lateinit var noResult : TextView
     @Inject lateinit var lyricsAPIDatasource: LyricsAPIDatasource
 
-    private val okHttpClient = OkHttpClient()
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
         binding.lifecycleOwner = this
-        setHasOptionsMenu(true)
 
         searchProgressBar = binding.root.findViewById(R.id.search_progressBar)
         searchProgressBar.visibility = View.GONE
@@ -169,42 +166,6 @@ class SearchFragment : Fragment() {
             }
         })
     }
-
-//    private fun setUpLoadingIndicatorObserver() {
-//        viewModel.loadingIndicator.observe(viewLifecycleOwner, Observer {
-//            when(it){
-//                IDLE -> {
-//                    noResult.visibility = View.GONE
-//                    searchProgressBar.visibility = View.GONE
-//                    error.visibility = View.GONE
-//                }
-//                LOADING -> {
-//                    noResult.visibility = View.GONE
-//                    error.visibility = View.GONE
-//                    mAdapter.submitList(null)
-//                    searchProgressBar.visibility = View.VISIBLE
-//                }
-//                LOADED -> {
-//                    error.visibility = View.GONE
-//                    searchProgressBar.visibility = View.GONE
-//                    if (viewModel.songs.isEmpty()) {
-//                        noResult.visibility = View.VISIBLE
-//                    }
-//                    else {
-//                        noResult.visibility = View.GONE
-//                        mAdapter.submitList(viewModel.songs)
-//                    }
-//                }
-//                ERROR -> {
-//                    noResult.visibility = View.GONE
-//                    mAdapter.submitList(null)
-//                    searchProgressBar.visibility = View.GONE
-//                    error.visibility = View.VISIBLE
-//                }
-//                else -> {}
-//            }
-//        })
-//    }
 
     private fun RecyclerView.setListenerAction(context: Context, adapter: SearchRecyclerAdapter, navController: NavController){
         addOnItemTouchListener(RecyclerViewTouchListener(context, this, object : RecyclerViewClickListener {
