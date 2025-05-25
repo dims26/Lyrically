@@ -1,9 +1,13 @@
 package com.dims.lyrically.screens
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.Window
+import android.view.WindowInsets
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -39,6 +43,7 @@ class NavActivity : AppCompatActivity(), ActivityProvider {
     override fun setToolbarAsActionbar(toolbar: Toolbar) { setSupportActionBar(toolbar) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setStatusBarColor(window, resources.getColor(R.color.colorPrimaryDark, theme))
         //Transition back to regular theme
         setTheme(R.style.NoActionBar)
         super.onCreate(savedInstanceState)
@@ -61,6 +66,18 @@ class NavActivity : AppCompatActivity(), ActivityProvider {
             if((destination as FragmentNavigator.Destination).className != SearchFragment::class.java.name){
                 val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(findViewById<View>(android.R.id.content).windowToken, 0)
+            }
+        }
+    }
+
+    fun setStatusBarColor(window: Window, color: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) { // Android 15+
+            window.decorView.setOnApplyWindowInsetsListener { view, insets ->
+                val statusBarInsets = insets.getInsets(WindowInsets.Type.statusBars())
+                view.setBackgroundColor(color)
+
+                view.setPadding(0, statusBarInsets.top, 0, 0)
+                insets
             }
         }
     }

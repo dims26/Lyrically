@@ -69,7 +69,7 @@ class FavViewModelTest {
     }
 
     @Test
-    fun test_deleteHistory() = runBlocking{
+    fun test_deleteFavourites() = runBlocking{
         val viewModel = FavViewModel(repository)
         val expected = favs[0]
 

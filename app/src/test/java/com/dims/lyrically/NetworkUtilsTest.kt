@@ -51,7 +51,7 @@ class NetworkUtilsTest {
         val activeInfo = connectivityManager.activeNetworkInfo
 
         assertTrue(activeInfo != null && activeInfo.isConnected)
-        assertEquals(ConnectivityManager.TYPE_WIFI, activeInfo.type)
+        assertEquals(ConnectivityManager.TYPE_WIFI, activeInfo?.type)
     }
 
     @Suppress("DEPRECATION")

@@ -8,7 +8,10 @@ import android.webkit.WebView
 import android.widget.ProgressBar
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -35,7 +38,6 @@ class DetailFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_detail, container, false)
-        setHasOptionsMenu(true)
 
 
         provider = arguments?.get("provider")!! as ActivityProvider
@@ -85,6 +87,8 @@ class DetailFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        provideMenuToActivity()
+
         viewModel.progress.observe(viewLifecycleOwner, Observer {
             detailProgressBar.progress = it
         })
@@ -92,33 +96,48 @@ class DetailFragment : Fragment() {
             if (it) detailProgressBar.visibility = View.VISIBLE
             else detailProgressBar.visibility = View.GONE
         })
-        //observe db for data
+        //update db history
         viewModel.updateHistory(song)
+    }
+
+    private fun provideMenuToActivity() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.lyric_detail_menu, menu)
+                favMenuItem = menu.findItem(R.id.favourite_lyric)
+                viewModel.favourites.observe(viewLifecycleOwner) {
+                    with(song) {
+                        if (it.contains(
+                                Favourites(
+                                    id, fullTitle, title, songArtImageThumbnailUrl,
+                                    url, titleWithFeatured, artistName
+                                )
+                            )
+                        ) {
+                            favMenuItem.icon = AppCompatResources.getDrawable(
+                                requireContext(),
+                                R.drawable.round_favorite_24
+                            )
+                        } else favMenuItem.icon = AppCompatResources.getDrawable(
+                            requireContext(),
+                            R.drawable.round_favorite_border_24
+                        )
+                    }
+                }
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                if (menuItem.itemId == R.id.favourite_lyric)
+                    viewModel.toggleFavourite(song)
+
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         webView.saveState(outState)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.lyric_detail_menu, menu)
-        favMenuItem = menu.findItem(R.id.favourite_lyric)
-        viewModel.favourites.observe(viewLifecycleOwner, Observer {
-            with(song){
-                if (it.contains(Favourites(id, fullTitle, title, songArtImageThumbnailUrl,
-                                url, titleWithFeatured, artistName))){
-                    favMenuItem.icon = AppCompatResources.getDrawable(requireContext(), R.drawable.round_favorite_24)}
-                else favMenuItem.icon = AppCompatResources.getDrawable(requireContext(), R.drawable.round_favorite_border_24)
-            }
-        })
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.favourite_lyric)
-            viewModel.toggleFavourite(song)
-
-        return true
     }
 }
 

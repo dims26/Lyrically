@@ -4,7 +4,10 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavArgument
 import androidx.navigation.NavController
@@ -57,7 +60,6 @@ class HomeFragment : Fragment(), HomeProvider {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        setHasOptionsMenu(true)
 
         provider = arguments?.get("provider") as ActivityProvider
         val factory = ViewModelFactory(provider.getRepo())
@@ -133,25 +135,34 @@ class HomeFragment : Fragment(), HomeProvider {
         return view
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.home_menu, menu)
-        menuItem = menu.findItem(R.id.action_clear_history)
-        menuItem.isVisible = false
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        provideMenuToActivity()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.action_clear_history) {
-            val clearHistoryDialog = AlertDialog.Builder(activity)
-            clearHistoryDialog.setPositiveButton("CLEAR") { _, _ ->
-                viewModel.clearHistory()
+    private fun provideMenuToActivity() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.home_menu, menu)
+                menuItem = menu.findItem(R.id.action_clear_history)
+                menuItem.isVisible = false
             }
-            clearHistoryDialog.setNegativeButton("CANCEL") { dialog, _ -> dialog.dismiss() }
-            clearHistoryDialog.setMessage("Clear history?").show()
-        } else if (item.itemId == R.id.action_about){
-            val action = HomeFragmentDirections.actionHomeFragmentToAboutFragment()
-            NavHostFragment.findNavController(getActivityNavContainer()!!).navigate(action)
-        }
-        return true
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                if (menuItem.itemId == R.id.action_clear_history) {
+                    val clearHistoryDialog = AlertDialog.Builder(activity)
+                    clearHistoryDialog.setPositiveButton("CLEAR") { _, _ ->
+                        viewModel.clearHistory()
+                    }
+                    clearHistoryDialog.setNegativeButton("CANCEL") { dialog, _ -> dialog.dismiss() }
+                    clearHistoryDialog.setMessage("Clear history?").show()
+                } else if (menuItem.itemId == R.id.action_about){
+                    val action = HomeFragmentDirections.actionHomeFragmentToAboutFragment()
+                    NavHostFragment.findNavController(getActivityNavContainer()!!).navigate(action)
+                }
+                return true
+            }
+
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 }
