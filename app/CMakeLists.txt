@@ -2,7 +2,7 @@
 # This ensures that a certain set of CMake features is available to
 # your build.
 
-cmake_minimum_required(VERSION 3.4.1)
+cmake_minimum_required(VERSION 3.22.1)
 
 # Specifies a library name, specifies whether the library is STATIC or
 # SHARED, and provides relative paths to the source code. You can
@@ -30,18 +30,13 @@ find_library( # Defines the name of the path variable that stores the
         # Specifies the name of the NDK library that
         # CMake needs to locate.
         log )
+find_library(android-lib android)
 
 # Links your native library against one or more other native libraries.
 target_link_libraries( # Specifies the target library.
         native-lib
 
+        # Links the android-lib library to the target library
+        ${android-lib}
         # Links the log library to the target library.
         ${log-lib} )
-
-#Build and link android_native_app_glue.c, which manages lifecycle events and touch input, to native-lib
-add_library( app-glue
-        STATIC
-        ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c )
-
-# You need to link static libraries against your shared native library.
-target_link_libraries( native-lib app-glue ${log-lib} )

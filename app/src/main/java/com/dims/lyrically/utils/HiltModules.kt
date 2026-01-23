@@ -3,6 +3,7 @@ package com.dims.lyrically.utils
 import com.dims.lyrically.models.Song
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,7 +37,9 @@ class HiltModules {
     @Provides
     @Named("GeniusGson")
     fun provideGeniusGson(deserializer: SongListDeserializer): Gson {
-        gsonBuilder.registerTypeAdapter(Song::class.java, deserializer)
+        gsonBuilder.registerTypeAdapter(
+            object : TypeToken<List<Song>>() {}.type,
+            deserializer)
 
         return gsonBuilder.create()
     }

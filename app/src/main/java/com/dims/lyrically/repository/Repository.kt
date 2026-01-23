@@ -157,7 +157,9 @@ class Repository(private val db:  LyricDatabase) : Parcelable {
                 if (response.code == 200) {
                     val gsonBuilder = GsonBuilder()
                     val deserializer = SongListDeserializer()
-                    gsonBuilder.registerTypeAdapter(Song::class.java, deserializer)
+                    gsonBuilder.registerTypeAdapter(
+                        object : TypeToken<List<Song>>() {}.type,
+                        deserializer)
 
                     val gson = gsonBuilder.create()
 

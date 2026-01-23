@@ -1,3 +1,7 @@
+plugins {
+    id 'com.google.devtools.ksp'
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
@@ -6,14 +10,16 @@ apply plugin: 'androidx.navigation.safeargs'
 apply plugin: 'com.google.dagger.hilt.android'
 
 android {
-    compileSdkVersion 35
+    // Pinned to ensure 16KB page support. Upgrade as needed
+    ndkVersion '29.0.14206865'
+    compileSdkVersion 36
     testOptions.unitTests.includeAndroidResources = true
     defaultConfig {
         applicationId "com.dims.lyrically"
         minSdkVersion 23
-        targetSdkVersion 35
-        versionCode 8
-        versionName "1.2.4"
+        targetSdkVersion 36
+        versionCode 9
+        versionName "1.2.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -58,71 +64,70 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-//    implementation "androidx.activity:activity-ktx:1.8.0-alpha06"
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.3.0'
-    debugImplementation 'androidx.fragment:fragment-testing:1.6.0'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
+    debugImplementation 'androidx.fragment:fragment-testing:1.8.9'
 
     //Hilt
-    implementation "com.google.dagger:hilt-android:2.56.2"
-    kapt "com.google.dagger:hilt-compiler:2.56.2"
+    implementation "com.google.dagger:hilt-android:2.59"
+    ksp "com.google.dagger:hilt-compiler:2.58"
 
     //android navigation component
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.6.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.6.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.9.6'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.9.6'
 
     //ViewModel and LiveData
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0"
 
     //Okhttp
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.squareup.okhttp3:okhttp:5.3.2'
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     //Room
-    implementation "androidx.room:room-runtime:2.6.0-alpha01"
-    kapt  "androidx.room:room-compiler:2.6.0-alpha01"
+    implementation "androidx.room:room-runtime:2.8.4"
+    ksp  "androidx.room:room-compiler:2.8.4"
 
     //Kotlin coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2"
 
     //Gson
-    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.13.2'
 
     //about page
     implementation 'io.github.medyo:android-about-page:2.0.0'
 
     constraints {
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.2.0") {
             because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
         }
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0") {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.2.0") {
             because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
         }
     }
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-inline:2.23.0'
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
     testImplementation 'androidx.arch.core:core-testing:2.2.0'
-    testImplementation 'com.jraska.livedata:testing-ktx:1.2.0'
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
-    testImplementation 'org.robolectric:robolectric:4.3.1'
-    testImplementation 'androidx.test:core-ktx:1.5.0'
-    testImplementation 'androidx.test.ext:junit-ktx:1.1.5'
-    androidTestImplementation 'androidx.test:runner:1.5.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.5'
-    androidTestImplementation 'androidx.test:rules:1.6.0-alpha01'
+    testImplementation 'com.jraska.livedata:testing-ktx:1.3.0'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2"
+    testImplementation 'org.robolectric:robolectric:4.16.1'
+    testImplementation 'androidx.test:core-ktx:1.7.0'
+    testImplementation 'androidx.test.ext:junit-ktx:1.3.0'
+    androidTestImplementation 'androidx.test:runner:1.7.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.7.0'
     androidTestImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
-    androidTestImplementation 'androidx.test:core-ktx:1.5.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.1'
+    androidTestImplementation 'androidx.test:core-ktx:1.7.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.7.0'
 }
 
 // Allow references to generated code

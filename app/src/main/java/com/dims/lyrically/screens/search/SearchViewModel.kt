@@ -52,6 +52,8 @@ class SearchViewModel(private val repo: Repository) : ViewModel() {
                 _songs.addAll(songs)
                 _loadingIndicator.postValue(LOADED)
             } catch (e: Exception) {
+                println(e.message)
+                System.out.println(e.message)
                 _loadingIndicator.postValue(ERROR)
             }
         }

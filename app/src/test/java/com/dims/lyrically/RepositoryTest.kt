@@ -944,7 +944,9 @@ class RepositoryTest {
         val expected = kotlin.run{
             val gsonBuilder = GsonBuilder()
             val deserializer = SongListDeserializer()
-            gsonBuilder.registerTypeAdapter(Song::class.java, deserializer)
+            gsonBuilder.registerTypeAdapter(
+                object : TypeToken<List<Song>>() {}.type,
+                deserializer)
 
             val gson = gsonBuilder.create()
             gson.fromJson<List<Song>>(jsonResponse, object : TypeToken<Song>() {}.type)

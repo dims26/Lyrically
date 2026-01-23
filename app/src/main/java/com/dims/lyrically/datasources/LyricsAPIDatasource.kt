@@ -34,7 +34,7 @@ class LyricsAPIDatasource @Inject constructor(private val client: OkHttpClient,
 
             if (response.code != 200) throw IOException()
 
-            gson.fromJson(response.body?.string(), object : TypeToken<Song>() {}.type)
+            gson.fromJson(response.body?.string(), object : TypeToken<List<Song>>() {}.type)
         }
     }
 }
